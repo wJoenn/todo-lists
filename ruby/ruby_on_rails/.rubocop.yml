@@ -1,0 +1,63 @@
+require:
+  - standard
+  - standard-custom
+  - standard-performance
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rspec
+
+inherit_gem:
+  standard: config/base.yml
+  standard-custom: config/base.yml
+  standard-performance: config/base.yml
+
+AllCops:
+  NewCops: enable
+  SuggestExtensions: false
+  Exclude:
+    - "bin/**/*"
+    - "config/**/*"
+    - "db/**/*"
+    - "node_modules/**/*"
+    - "tmp/**/*"
+    - "vendor/**/*"
+
+Rails/UnknownEnv:
+ Environments:
+    - production
+    - staging
+    - development
+    - test
+    - demo
+
+Layout/EmptyLineAfterGuardClause:
+  Enabled: true
+Layout/LineLength:
+  Enabled: true
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: "space"
+
+Lint/ShadowingOuterLocalVariable:
+  Enabled: true
+
+Metrics/MethodLength:
+  Enabled: true
+  CountAsOne: ["array", "hash", "heredoc", "method_call"]
+
+RSpec/ExampleLength:
+  Enabled: false
+RSpec/MultipleExpectations:
+  Enabled: false
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+Style/BlockDelimiters:
+  Enabled: true
+  EnforcedStyle: braces_for_chaining
+Style/IfUnlessModifier:
+  Enabled: true
+Style/MultilineTernaryOperator:
+  Enabled: true
+Style/RegexpLiteral:
+  Enabled: true
+  AllowInnerSlashes: true
