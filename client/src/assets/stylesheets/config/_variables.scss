@@ -1,0 +1,31 @@
+// Colours
+$background-primary: #181818;
+$background-secondary: #222222;
+$background-ternary: #303030;
+
+$text-primary: #d3d3d3;
+$text-secondary: #e3e3e380;
+
+$nuxt-green-dark: #00dc82;
+$nuxt-green-light: #80eec0;
+
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=Azeret+Mono&family=Poppins:wght@100;400;500&family=Roboto:wght@100;400;500&display=swap');
+
+$font-main: 'Roboto', sans-serif;
+$font-header: 'Poppins', sans-serif;
+
+// Sizes
+$size-lg: 1.2rem;
+$size: 1rem;
+$size-md: 0.9rem;
+$size-sm: 0.8rem;
+$size-xs: 0.5rem;
+
+// Borders
+$border: 1px solid $text-secondary;
+$border-dark: 1px solid $background-ternary;
+
+// Paddings
+$padding: $size-xs $size;
+$padding-sm: calc($size-xs / 2) calc($size / 2);

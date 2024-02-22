@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "noImplicitThis": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "verbatimModuleSyntax": true,
+    "paths": {
+      "~/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "src/**/*.d.ts",
+    ".vue/*.d.ts",
+    "env.d.ts"
+  ],
+  "references": [
+    { "path": "./tsconfig.node.json" }
+  ]
+}
