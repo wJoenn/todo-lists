@@ -1,0 +1,21 @@
+name: RubyOnRails
+on:
+  pull_request:
+    paths:
+     - ruby/ruby_on_rails/**
+  push:
+    branches: [master]
+    paths:
+     - ruby/ruby_on_rails/**
+jobs:
+  rubocop:
+    name: RuboCop
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Run RuboCop
+        run: cd ruby && cd ruby_on_rails && bundle exec rubocop
