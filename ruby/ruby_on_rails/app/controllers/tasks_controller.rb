@@ -2,7 +2,7 @@ class TasksController < ApplicationController
   before_action :set_task, only: %i[complete destroy]
 
   def index
-    render json: { tasks: Task.all }, status: :ok
+    render json: { tasks: current_user.tasks }, status: :ok
   end
 
   def create
@@ -29,7 +29,7 @@ class TasksController < ApplicationController
   private
 
   def set_task
-    @task = Task.find(params[:id])
+    @task = current_user.tasks.find(params[:id])
   end
 
   def task_params

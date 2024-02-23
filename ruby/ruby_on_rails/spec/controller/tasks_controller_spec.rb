@@ -8,28 +8,39 @@ RSpec.describe TasksController, type: :request do
   end
 
   describe "GET /tasks" do
-    before do
-      create(:task, user:)
-      get "/tasks"
+    context "when a User is signed in" do
+      before do
+        create(:task, user:)
+        get "/tasks"
+      end
+
+      it "returns a JSON object" do
+        expect(response.body).to be_a String
+        expect(response.parsed_body).to have_key "tasks"
+      end
+
+      it "returns a list of Task" do
+        data = response.parsed_body
+        expect(data["tasks"]).to contain_exactly hash_including("title" => "My task", "completed" => false)
+      end
+
+      it "returns a HTTP status of success" do
+        expect(response).to have_http_status :success
+      end
     end
 
-    it "returns a JSON object" do
-      expect(response.body).to be_a String
-      expect(response.parsed_body).to have_key "tasks"
-    end
+    context "when a User is not signed in" do
+      it "returns a HTTP status of unauthorized" do
+        sign_out user
+        get "/tasks"
 
-    it "returns a list of Task" do
-      data = response.parsed_body
-      expect(data["tasks"]).to contain_exactly hash_including("title" => "My task", "completed" => false)
-    end
-
-    it "returns a HTTP status of success" do
-      expect(response).to have_http_status :success
+        expect(response).to have_http_status :unauthorized
+      end
     end
   end
 
   describe "POST /tasks" do
-    context "with proper param" do
+    context "when a User is signed in and with proper param" do
       before do
         post "/tasks", params: { task: { title: "My task" } }
       end
@@ -53,7 +64,7 @@ RSpec.describe TasksController, type: :request do
       end
     end
 
-    context "without proper params" do
+    context "when a User is signed in but without proper params" do
       before do
         post "/tasks", params: { task: { title: nil } }
       end
@@ -76,46 +87,77 @@ RSpec.describe TasksController, type: :request do
         expect(response).to have_http_status :unprocessable_entity
       end
     end
+
+    context "when a User is not signed in" do
+      it "returns a HTTP status of unauthorized" do
+        sign_out user
+        post "/tasks", params: { task: { title: "My task" } }
+
+        expect(response).to have_http_status :unauthorized
+      end
+    end
   end
 
   describe "DELETE /tasks/:id" do
-    before do
-      task = create(:task, user:)
-      delete "/tasks/#{task.id}"
+    context "when a User is signed in" do
+      before do
+        task = create(:task, user:)
+        delete "/tasks/#{task.id}"
+      end
+
+      it "destroys the instance of Task" do
+        expect(Task.count).to be 0
+      end
+
+      it "returns a HTTP status of success" do
+        expect(response).to have_http_status :success
+      end
     end
 
-    it "destroys the instance of Task" do
-      expect(Task.count).to be 0
-    end
+    context "when a User is not signed in" do
+      it "returns a HTTP status of unauthorized" do
+        sign_out user
+        get "/tasks"
 
-    it "returns a HTTP status of success" do
-      expect(response).to have_http_status :success
+        expect(response).to have_http_status :unauthorized
+      end
     end
   end
 
   describe "GET /tasks/:id/complete" do
     let!(:task) { create(:task, user:) }
 
-    before do
-      patch "/tasks/#{task.id}/complete"
+    context "when a User is signed in" do
+      before do
+        patch "/tasks/#{task.id}/complete"
+      end
+
+      it "returns a JSON object" do
+        expect(response.body).to be_a String
+        expect(response.parsed_body).to have_key "task"
+      end
+
+      it "returns the updated instance of Task" do
+        data = response.parsed_body
+        expect(data.dig("task", "id")).to be task.id
+      end
+
+      it "marks the Task instance as completed" do
+        expect(Task.find(task.id)).to be_completed
+      end
+
+      it "returns a HTTP status of success" do
+        expect(response).to have_http_status :success
+      end
     end
 
-    it "returns a JSON object" do
-      expect(response.body).to be_a String
-      expect(response.parsed_body).to have_key "task"
-    end
+    context "when a User is not signed in" do
+      it "returns a HTTP status of unauthorized" do
+        sign_out user
+        get "/tasks"
 
-    it "returns the updated instance of Task" do
-      data = response.parsed_body
-      expect(data.dig("task", "id")).to be task.id
-    end
-
-    it "marks the Task instance as completed" do
-      expect(Task.find(task.id)).to be_completed
-    end
-
-    it "returns a HTTP status of success" do
-      expect(response).to have_http_status :success
+        expect(response).to have_http_status :unauthorized
+      end
     end
   end
 end
