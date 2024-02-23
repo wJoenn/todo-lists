@@ -10,8 +10,8 @@ class User < ApplicationRecord
 
   def serialize
     {
-      id: self.id,
-      email: self.email
+      id: id,
+      email: email
     }
   end
 end

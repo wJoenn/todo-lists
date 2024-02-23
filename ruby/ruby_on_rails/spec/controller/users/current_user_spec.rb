@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe "Users::CurrentUsers", type: :request do
   describe "GET /current_user" do
@@ -6,7 +6,15 @@ RSpec.describe "Users::CurrentUsers", type: :request do
       let(:user) { create(:user) }
 
       let(:jwt_token) do
-        token = { sub: user.id, scp: "user", aud: nil, iat: Time.current.to_i, exp: 1.month.from_now.to_i, jti: user.jti }
+        token = {
+          sub: user.id,
+          scp: "user",
+          aud: nil,
+          iat: Time.current.to_i,
+          exp: 1.month.from_now.to_i,
+          jti: user.jti
+        }
+
         JWT.encode(token, Rails.application.credentials.devise_jwt_secret_key!)
       end
 
