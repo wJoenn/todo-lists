@@ -1,9 +1,15 @@
 require "rails_helper"
 
 RSpec.describe TasksController, type: :request do
+  let!(:user) { create(:user) }
+
+  before do
+    sign_in user
+  end
+
   describe "GET /tasks" do
     before do
-      create(:task)
+      create(:task, user:)
       get "/tasks"
     end
 
@@ -74,7 +80,7 @@ RSpec.describe TasksController, type: :request do
 
   describe "DELETE /tasks/:id" do
     before do
-      task = create(:task)
+      task = create(:task, user:)
       delete "/tasks/#{task.id}"
     end
 
@@ -88,7 +94,7 @@ RSpec.describe TasksController, type: :request do
   end
 
   describe "GET /tasks/:id/complete" do
-    let!(:task) { create(:task) }
+    let!(:task) { create(:task, user:) }
 
     before do
       patch "/tasks/#{task.id}/complete"
