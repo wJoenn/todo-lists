@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Users::SessionsController, type: :request do
-  let!(:user) { create(:user) }
+  let(:user) { create(:user) }
 
   describe "POST /users/sign_in" do
     context "with proper params" do

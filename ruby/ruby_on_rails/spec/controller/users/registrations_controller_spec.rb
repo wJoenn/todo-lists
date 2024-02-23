@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Users::RegistrationsController, type: :request do
   describe "POST /users" do
     context "with proper params" do
-      let!(:email) { "user@example.com" }
+      let(:email) { "user@example.com" }
 
       before do
         post "/users", params: {

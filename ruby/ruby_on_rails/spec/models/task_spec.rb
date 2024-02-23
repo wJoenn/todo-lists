@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Task do
-  let!(:user) { create(:user) }
+  let(:user) { create(:user) }
 
   describe "associations" do
     it "belongs to a User" do

@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe TasksController, type: :request do
-  let!(:user) { create(:user) }
+  let(:user) { create(:user) }
 
   before do
     sign_in user
