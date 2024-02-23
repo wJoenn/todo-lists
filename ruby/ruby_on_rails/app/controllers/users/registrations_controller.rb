@@ -5,7 +5,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     yield resource if block_given?
 
     if resource.persisted?
-      render json: { user: resource }, status: :created
+      render json: { user: resource.serialize }, status: :created
     else
       render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
     end

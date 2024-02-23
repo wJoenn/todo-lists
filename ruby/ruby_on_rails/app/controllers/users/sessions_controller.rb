@@ -5,7 +5,7 @@ class Users::SessionsController < Devise::SessionsController
     if self.resource.present?
       sign_in(resource_name, resource)
       yield resource if block_given?
-      render json: { user: resource }, status: :ok
+      render json: { user: resource.serialize }, status: :ok
     else
       render json: { errors: ["Invalid Email or Password"] }, status: :unauthorized
     end

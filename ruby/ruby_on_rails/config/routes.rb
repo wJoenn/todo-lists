@@ -8,6 +8,8 @@ Rails.application.routes.draw do
     registrations: "users/registrations"
   }
 
+  get "/current_user", to: "users/current_user#index"
+
   resources :tasks, only: %i[index create destroy] do
     member do
       patch :complete
