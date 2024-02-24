@@ -17,7 +17,6 @@ class TasksController < ApplicationController
 
   def destroy
     @task.destroy
-
     render status: :ok
   end
 
