@@ -1,13 +1,16 @@
 import App from "./App.vue"
+import router from "~/router"
 import "./assets/stylesheets/application.scss"
 
 const app = createApp(App)
 const pinia = createPinia()
-const router = createRouter({
-  history: createWebHistory()
-})
+const sessionStore = useSessionStore(pinia)
 
-app
-  .use(pinia)
-  .use(router)
-  .mount("#app")
+app.use(pinia)
+sessionStore
+  .signInWithToken()
+  .then(() => {
+    app
+      .use(router)
+      .mount("#app")
+  })

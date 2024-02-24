@@ -2,6 +2,8 @@
   const router = useRouter()
   const sessionStore = useSessionStore()
 
-  sessionStore.signOut()
-  router.push("/")
+  onBeforeMount(async () => {
+    await sessionStore.signOut()
+    router.push("/")
+  })
 </script>

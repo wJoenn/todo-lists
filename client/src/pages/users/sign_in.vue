@@ -20,10 +20,11 @@
   const router = useRouter()
   const sessionStore = useSessionStore()
 
-  const handleSubmit = (event: Event) => {
+  const handleSubmit = async (event: Event) => {
     const form = event.target as HTMLFormElement
     const formData = new FormData(form)
-    sessionStore.signIn(formData)
+
+    await sessionStore.signIn(formData)
     router.push("/")
   }
 </script>

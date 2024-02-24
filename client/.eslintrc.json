@@ -36,6 +36,7 @@
     "import/order": ["error", { "groups": ["type", "builtin", "external"] }],
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "import/no-named-as-default-member": "off",
+    "import/no-unresolved": "off",
 
     "vue/comma-dangle": ["error", "never"],
     "vue/eqeqeq": ["error", "always", { "null": "never" }],
@@ -77,11 +78,7 @@
     "import/resolver": {
       "alias": [
         ["~", "./src"]
-      ],
-      "node": {
-        "extensions": [".ts"],
-        "moduleDirectory": ["."]
-      }
+      ]
     }
   }
 }
