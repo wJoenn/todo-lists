@@ -25,6 +25,7 @@
     "eqeqeq": ["error", "always", { "null": "never" }],
     "max-len": ["error", 120],
     "multiline-ternary": ["error", "never"],
+    "no-console": "warn",
     "quotes": ["error", "double"],
     "quote-props": ["error", "consistent-as-needed"],
     "space-before-function-paren": ["error", {

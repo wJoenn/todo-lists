@@ -22,24 +22,18 @@ export const useSessionStore = defineStore("SessionStore", () => {
         })
 
         user.value = response.data
-      } catch (error) {
-        console.log(error)
+      } catch {
+        _resetState()
       }
     }
   }
 
   const signOut = async () => {
-    try {
-      axios.delete(`${import.meta.env.VITE_API_URL}/users/sign_out`, {
-        headers: authorizationHeader.value
-      })
+    axios.delete(`${import.meta.env.VITE_API_URL}/users/sign_out`, {
+      headers: authorizationHeader.value
+    })
 
-      user.value = undefined
-      bearerToken.value = undefined
-      localStorage.removeItem("bearerToken")
-    } catch (error) {
-      console.log(error)
-    }
+    _resetState()
   }
 
   const signUp = (formData: FormData) => _postRequest("/users", formData)
@@ -55,8 +49,14 @@ export const useSessionStore = defineStore("SessionStore", () => {
       bearerToken.value = response.headers.authorization
       localStorage.bearerToken = bearerToken.value
     } catch (error: any) {
-      console.log(error.response.data.errors)
+      return error.response.data.errors
     }
+  }
+
+  const _resetState = () => {
+    user.value = undefined
+    bearerToken.value = undefined
+    localStorage.removeItem("bearerToken")
   }
 
   return { user, isLoggedIn, signIn, signInWithToken, signOut, signUp }
