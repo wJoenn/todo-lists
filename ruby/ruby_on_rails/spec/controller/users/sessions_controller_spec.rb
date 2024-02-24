@@ -22,6 +22,10 @@ RSpec.describe Users::SessionsController, type: :request do
       it "returns a HTTP status of ok" do
         expect(response).to have_http_status :ok
       end
+
+      it "returns a Authorization header" do
+        expect(response["Authorization"]).to be_present
+      end
     end
 
     context "without proper params" do

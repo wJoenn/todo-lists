@@ -32,6 +32,10 @@ RSpec.describe Users::RegistrationsController, type: :request do
       it "returns a HTTP status of created" do
         expect(response).to have_http_status :created
       end
+
+      it "returns a Authorization header" do
+        expect(response["Authorization"]).to be_present
+      end
     end
 
     context "without proper params" do
