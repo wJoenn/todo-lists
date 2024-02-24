@@ -1,8 +1,6 @@
-import type { AxiosResponse } from "axios"
-
 type User = {
+  id: number
   email: string
-  password: string
 }
 
 export const useSessionStore = defineStore("SessionStore", () => {
