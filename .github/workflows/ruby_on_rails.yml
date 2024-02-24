@@ -13,9 +13,8 @@ env:
   RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
 
 jobs:
-  rubocop:
-    name: RuboCop
-    runs-on: ubuntu-latest
+  fasterer:
+    name: Fasterer
     steps:
       - uses: actions/checkout@v3
       - name: Setup Ruby
@@ -23,8 +22,8 @@ jobs:
         with:
           bundler-cache: true
           working-directory: ./ruby/ruby_on_rails
-      - name: Run RuboCop
-        run: bundle exec rubocop
+      - name: Run Fasterer
+        run: bundle exec fasterer
         working-directory: ./ruby/ruby_on_rails
 
   rspec:
@@ -57,3 +56,17 @@ jobs:
         working-directory: ./ruby/ruby_on_rails
         env:
           DATABASE_URL: 'postgres://test:password@localhost/application_test'
+
+  rubocop:
+    name: RuboCop
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+          working-directory: ./ruby/ruby_on_rails
+      - name: Run RuboCop
+        run: bundle exec rubocop
+        working-directory: ./ruby/ruby_on_rails
