@@ -11,12 +11,12 @@ RSpec.describe Users::SessionsController, type: :request do
 
       it "returns a JSON object" do
         expect(response.body).to be_a String
-        expect(response.parsed_body).to have_key "user"
+        expect(response.parsed_body).to have_key "id"
       end
 
       it "returns the instance of User" do
         data = response.parsed_body
-        expect(data.dig("user", "email")).to eq user.email
+        expect(data["email"]).to eq user.email
       end
 
       it "returns a HTTP status of ok" do

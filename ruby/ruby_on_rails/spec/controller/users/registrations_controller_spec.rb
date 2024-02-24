@@ -17,7 +17,7 @@ RSpec.describe Users::RegistrationsController, type: :request do
 
       it "returns a JSON object" do
         expect(response.body).to be_a String
-        expect(response.parsed_body).to have_key "user"
+        expect(response.parsed_body).to have_key "id"
       end
 
       it "creates an instance of User" do
@@ -26,7 +26,7 @@ RSpec.describe Users::RegistrationsController, type: :request do
 
       it "returns the new instance of User" do
         data = response.parsed_body
-        expect(data.dig("user", "email")).to eq email
+        expect(data["email"]).to eq email
       end
 
       it "returns a HTTP status of created" do

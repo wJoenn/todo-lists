@@ -2,14 +2,14 @@ class TasksController < ApplicationController
   before_action :set_task, only: %i[complete destroy]
 
   def index
-    render json: { tasks: current_user.tasks }, status: :ok
+    render json: current_user.tasks, status: :ok
   end
 
   def create
     task = current_user.tasks.new(task_params)
 
     if task.save
-      render json: { task: task }, status: :created
+      render json: task, status: :created
     else
       render json: { errors: task.errors.full_messages }, status: :unprocessable_entity
     end
@@ -23,7 +23,7 @@ class TasksController < ApplicationController
 
   def complete
     @task.update(completed: true)
-    render json: { task: @task }, status: :ok
+    render json: @task, status: :ok
   end
 
   private

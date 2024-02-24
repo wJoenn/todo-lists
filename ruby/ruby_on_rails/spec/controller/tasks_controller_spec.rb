@@ -14,14 +14,14 @@ RSpec.describe TasksController, type: :request do
         get "/tasks"
       end
 
-      it "returns a JSON object" do
+      it "returns a JSON array" do
         expect(response.body).to be_a String
-        expect(response.parsed_body).to have_key "tasks"
+        expect(response.parsed_body).to all have_key "id"
       end
 
       it "returns a list of Task" do
         data = response.parsed_body
-        expect(data["tasks"]).to contain_exactly hash_including("title" => "My task", "completed" => false)
+        expect(data).to contain_exactly hash_including("title" => "My task", "completed" => false)
       end
 
       it "returns a HTTP status of success" do
@@ -47,7 +47,7 @@ RSpec.describe TasksController, type: :request do
 
       it "returns a JSON object" do
         expect(response.body).to be_a String
-        expect(response.parsed_body).to have_key "task"
+        expect(response.parsed_body).to have_key "id"
       end
 
       it "creates an instance of Task" do
@@ -56,7 +56,7 @@ RSpec.describe TasksController, type: :request do
 
       it "returns the new instance of Task" do
         data = response.parsed_body
-        expect(data.dig("task", "title")).to eq "My task"
+        expect(data["title"]).to eq "My task"
       end
 
       it "returns a HTTP status of created" do
@@ -134,12 +134,12 @@ RSpec.describe TasksController, type: :request do
 
       it "returns a JSON object" do
         expect(response.body).to be_a String
-        expect(response.parsed_body).to have_key "task"
+        expect(response.parsed_body).to have_key "id"
       end
 
       it "returns the updated instance of Task" do
         data = response.parsed_body
-        expect(data.dig("task", "id")).to be task.id
+        expect(data["id"]).to be task.id
       end
 
       it "marks the Task instance as completed" do
