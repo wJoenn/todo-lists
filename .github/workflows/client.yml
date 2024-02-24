@@ -1,0 +1,43 @@
+name: Client
+
+on:
+  pull_request:
+    paths:
+     - client/**
+  push:
+    branches: [master]
+    paths:
+     - client/**
+
+jobs:
+  eslint:
+    name: EsLint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./client
+      - name: Run esLint
+        run: npm run lint
+        working-directory: ./client
+
+  typescript:
+    name: TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./client
+      - name: Run TypeScript
+        run: npm run tsc
+        working-directory: ./client
