@@ -17,11 +17,11 @@ export const useSessionStore = defineStore("SessionStore", () => {
 
     if (bearerToken.value) {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/current_user`, {
+        const response = await axios.get<User>(`${import.meta.env.VITE_API_URL}/current_user`, {
           headers: authorizationHeader.value
         })
 
-        user.value = response.data.user
+        user.value = response.data
       } catch (error) {
         console.log(error)
       }
@@ -47,11 +47,11 @@ export const useSessionStore = defineStore("SessionStore", () => {
   const _postRequest = async (endPoint: string, formData: FormData) => {
     try {
       const params = { user: Object.fromEntries(formData) }
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}${endPoint}`, params, {
+      const response = await axios.post<User>(`${import.meta.env.VITE_API_URL}${endPoint}`, params, {
         headers: { "Content-Type": "application/json" }
       })
 
-      user.value = response.data.user
+      user.value = response.data
       bearerToken.value = response.headers.authorization
       localStorage.bearerToken = bearerToken.value
     } catch (error: any) {
