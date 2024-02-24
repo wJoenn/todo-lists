@@ -1,5 +1,5 @@
 <template>
-  <div>Sign up</div>
+  <h1>Sign up</h1>
 
   <form @submit.prevent="handleSubmit">
     <input name="email" type="text" placeholder="Email...">
@@ -8,7 +8,8 @@
     <input type="submit">
   </form>
 
-  <p>Already have an account?</p>
+  <p v-for="(error, index) in errors" :key="index" class="error">{{ error }}</p>
+
   <RouterLink to="/users/sign_in">Sign in</RouterLink>
 </template>
 
@@ -16,11 +17,24 @@
   const router = useRouter()
   const sessionStore = useSessionStore()
 
+  const errors = ref<string[]>([])
+
   const handleSubmit = async (event: Event) => {
+    errors.value = []
     const form = event.target as HTMLFormElement
     const formData = new FormData(form)
 
-    await sessionStore.signUp(formData)
-    router.push("/")
+    const response = await sessionStore.signUp(formData)
+    if (sessionStore.isLoggedIn) {
+      router.push("/")
+    } else {
+      errors.value = response
+    }
   }
 </script>
+
+<style scoped lang="scss">
+  .error {
+    color: $text-negative;
+  }
+</style>

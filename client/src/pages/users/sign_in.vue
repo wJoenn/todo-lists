@@ -7,12 +7,8 @@
     <input type="submit">
   </form>
 
-  <ul>
-    <li>1</li>
-    <li>2</li>
-  </ul>
+  <p v-for="(error, index) in errors" :key="index" class="error">{{ error }}</p>
 
-  <p>Dont have an account yet?</p>
   <RouterLink to="/users/sign_up">Sign up</RouterLink>
 </template>
 
@@ -20,11 +16,24 @@
   const router = useRouter()
   const sessionStore = useSessionStore()
 
+  const errors = ref<string[]>([])
+
   const handleSubmit = async (event: Event) => {
+    errors.value = []
     const form = event.target as HTMLFormElement
     const formData = new FormData(form)
 
-    await sessionStore.signIn(formData)
-    router.push("/")
+    const response = await sessionStore.signIn(formData)
+    if (sessionStore.isLoggedIn) {
+      router.push("/")
+    } else {
+      errors.value = response
+    }
   }
 </script>
+
+<style scoped lang="scss">
+  .error {
+    color: $text-negative;
+  }
+</style>
