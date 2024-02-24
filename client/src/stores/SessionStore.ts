@@ -5,17 +5,21 @@ type User = {
 
 export const useSessionStore = defineStore("SessionStore", () => {
   const user = ref<User>()
-  const bearerToken = ref<string>()
+  const _bearerToken = ref<string>()
 
-  const authorizationHeader = computed(() => ({ Authorization: bearerToken.value }))
-  const isLoggedIn = computed(() => !!bearerToken.value)
+  const authorizationHeader = computed(() => ({
+    "Authorization": _bearerToken.value,
+    "Content-Type": "application/json"
+  }))
+
+  const isLoggedIn = computed(() => !!_bearerToken.value)
 
   const signIn = (formData: FormData) => _postRequest("/users/sign_in", formData)
 
   const signInWithToken = async () => {
-    bearerToken.value = localStorage.bearerToken
+    _bearerToken.value = localStorage.bearerToken
 
-    if (bearerToken.value) {
+    if (_bearerToken.value) {
       try {
         const response = await axios.get<User>(`${import.meta.env.VITE_API_URL}/current_user`, {
           headers: authorizationHeader.value
@@ -46,8 +50,8 @@ export const useSessionStore = defineStore("SessionStore", () => {
       })
 
       user.value = response.data
-      bearerToken.value = response.headers.authorization
-      localStorage.bearerToken = bearerToken.value
+      _bearerToken.value = response.headers.authorization
+      localStorage.bearerToken = _bearerToken.value
     } catch (error: any) {
       return error.response.data.errors
     }
@@ -55,9 +59,9 @@ export const useSessionStore = defineStore("SessionStore", () => {
 
   const _resetState = () => {
     user.value = undefined
-    bearerToken.value = undefined
+    _bearerToken.value = undefined
     localStorage.removeItem("bearerToken")
   }
 
-  return { user, isLoggedIn, signIn, signInWithToken, signOut, signUp }
+  return { user, authorizationHeader, isLoggedIn, signIn, signInWithToken, signOut, signUp }
 })
