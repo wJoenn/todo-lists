@@ -1,0 +1,38 @@
+name: Sinatra
+
+on:
+  pull_request:
+    paths:
+     - ruby/sinatra/**
+  push:
+    branches: [master]
+    paths:
+     - ruby/sinatra/**
+
+jobs:
+  fasterer:
+    name: Fasterer
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+          working-directory: ./ruby/sinatra
+      - name: Run Fasterer
+        run: bundle exec fasterer
+        working-directory: ./ruby/sinatra
+
+  rubocop:
+    name: RuboCop
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+          working-directory: ./ruby/sinatra
+      - name: Run RuboCop
+        run: bundle exec rubocop
+        working-directory: ./ruby/sinatra
