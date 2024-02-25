@@ -1,4 +1,4 @@
-require_relative "../rake_helper"
+require_relative "../sinatra_helper"
 
 RSpec.describe Task do
   describe "validations" do

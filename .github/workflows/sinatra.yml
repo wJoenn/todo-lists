@@ -44,8 +44,8 @@ jobs:
           gem install bundler
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-          bundle exec rake db:create RAKE_ENV=test
-          bundle exec rake db:migrate RAKE_ENV=test
+          bundle exec rake db:create RAILS_ENV=test
+          bundle exec rake db:migrate RAILS_ENV=test
         working-directory: ./ruby/sinatra
         env:
           DATABASE_URL: 'postgres://test:password@localhost/application_test'

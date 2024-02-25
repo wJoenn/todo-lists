@@ -1,9 +1,11 @@
 development:
   adapter: postgresql
-  database: sinatra-development
+  database: sinatra_development
   encoding: unicode
+  pool: 5
 
 test:
   adapter: postgresql
-  database: sinatra-test
+  database: sinatra_test
   encoding: unicode
+  pool: 5

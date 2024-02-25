@@ -1,6 +1,6 @@
 require "rack/test"
 
-ENV["RAKE_ENV"] ||= "test"
+ENV["RAILS_ENV"] ||= "test"
 
 require_relative "../config/application"
 
