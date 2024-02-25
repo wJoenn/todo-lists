@@ -3,5 +3,5 @@ require_relative "config/application"
 
 get "/tasks" do
   status 200
-  [{ id: 1, title: "My task", completed: false }].to_json
+  Task.all.to_json
 end
