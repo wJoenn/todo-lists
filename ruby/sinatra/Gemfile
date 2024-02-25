@@ -45,7 +45,15 @@ group :development, :test do
   # [https://github.com/deivid-rodriguez/pry-byebug]
   gem "pry-byebug", "~> 3.10.1"
 
+  # A small, simple testing API for Rack apps
+  # [https://github.com/rack/rack-test]
+  gem "rack-test", "~> 2.1.0"
+
   # Restarts an app when the filesystem changes
   # [https://github.com/alexch/rerun]
   gem "rerun", "~> 0.14.0"
+
+  # Rspec provides the structure for writing executable examples of how your code should behave
+  # [https://github.com/rspec/rspec-core]
+  gem "rspec", "~> 3.13.0"
 end
