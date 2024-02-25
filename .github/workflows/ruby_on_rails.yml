@@ -15,6 +15,7 @@ env:
 jobs:
   fasterer:
     name: Fasterer
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Setup Ruby
