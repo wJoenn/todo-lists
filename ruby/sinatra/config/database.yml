@@ -1,0 +1,9 @@
+development:
+  adapter: postgresql
+  database: sinatra-development
+  encoding: unicode
+
+test:
+  adapter: postgresql
+  database: sinatra-test
+  encoding: unicode

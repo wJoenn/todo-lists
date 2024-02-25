@@ -1,6 +1,5 @@
 require "sinatra"
-
-set :port, 3000
+require_relative "config/application"
 
 get "/tasks" do
   status 200
