@@ -18,6 +18,7 @@ AllCops:
     - "db/**/*"
     - "node_modules/**/*"
     - "tmp/**/*"
+    - "vendor/**/*"
 
 Layout/EmptyLineAfterGuardClause:
   Enabled: true
