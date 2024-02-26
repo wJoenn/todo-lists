@@ -1,24 +1,9 @@
-# README
+# Ruby on Rails
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- [x] Models linked to a PostgreSQL database through an ORM
+- [x] CRUD actions to create a task, destroy a task, set a task as completed and get all existing tasks
+- [x] Authentication with encrypted password and Json Web Token for client side auth
+- [ ] Import and export of CSV files containing the tasks
+- [x] Transactional tests with fixtures and 100% code coverage
+- [x] Linting & Formating
+- [x] CLI commands for database management
