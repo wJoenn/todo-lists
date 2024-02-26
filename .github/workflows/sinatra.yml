@@ -49,7 +49,7 @@ jobs:
         working-directory: ./ruby/sinatra
         env:
           DATABASE_URL: 'postgres://test:password@localhost/application_test'
-          RACK_ENV: test
+          RAILS_ENV: test
       - name: Run RSpec
         run: bundle exec rspec
         working-directory: ./ruby/sinatra

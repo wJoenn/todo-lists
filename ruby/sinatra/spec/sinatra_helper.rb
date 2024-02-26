@@ -1,4 +1,4 @@
-ENV["RACK_ENV"] ||= "test"
+ENV["RAILS_ENV"] ||= "test"
 
 require "rack/test"
 require "database_cleaner/active_record"
@@ -6,6 +6,12 @@ require_relative "../app"
 
 def app
   Sinatra::Application
+end
+
+begin
+  ActiveRecord::Migration.maintain_test_schema!
+rescue ActiveRecord::PendingMigrationError => e
+  abort e.to_s.strip
 end
 
 RSpec.configure do |config|
