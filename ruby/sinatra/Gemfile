@@ -41,6 +41,10 @@ group :development do
 end
 
 group :development, :test do
+  # Strategies for cleaning databases using ActiveRecord. Can be used to ensure a clean state for testing
+  # [https://github.com/DatabaseCleaner/database_cleaner-active_record]
+  gem "database_cleaner-active_record"
+
   # Step-by-step debugging and stack navigation in Pry
   # [https://github.com/deivid-rodriguez/pry-byebug]
   gem "pry-byebug", "~> 3.10.1"
