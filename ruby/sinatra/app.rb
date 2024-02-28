@@ -13,7 +13,7 @@ helpers do
     data = request.body.read
 
     if data.present?
-      @parsed_params = JSON.parse(request.body.read)
+      @parsed_params = JSON.parse(data)
     else
       @parsed_params = params["params"]
     end
@@ -97,4 +97,8 @@ patch "/tasks/:id/complete" do
 
   status 200
   task.to_json
+end
+
+options "*" do
+  200
 end
