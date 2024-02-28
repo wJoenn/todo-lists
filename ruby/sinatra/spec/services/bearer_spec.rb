@@ -11,7 +11,7 @@ RSpec.describe Bearer, type: :service do
     end
 
     it "returns nil when a JWT::VerificationError is triggered" do
-      decoded_bearer = described_class.decode(bearer[0..-10])
+      decoded_bearer = described_class.decode("#{bearer[0...]}a")
       expect(decoded_bearer).to be_nil
     end
 
