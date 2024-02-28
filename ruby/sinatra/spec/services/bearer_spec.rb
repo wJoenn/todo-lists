@@ -23,7 +23,7 @@ RSpec.describe Bearer, type: :service do
 
   describe "::encode" do
     it "encodes a jti into a Json Web Token" do
-      expect(bearer).to match /^Bearer \w+/
+      expect(bearer).to match(/^Bearer \w+/)
     end
   end
 

@@ -7,6 +7,6 @@ namespace :db do
 end
 
 task :secret do
-  require 'securerandom'
+  require "securerandom"
   puts SecureRandom.hex(64)
 end
