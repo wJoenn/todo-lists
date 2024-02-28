@@ -67,7 +67,7 @@ RSpec.describe "/tasks", type: :request do
       end
 
       it "returns a HTTP status of unprocessable_entity" do
-        expect(last_response.status).to be 404
+        expect(last_response.status).to be 422
       end
     end
   end
