@@ -1,15 +1,22 @@
 class User < ActiveRecord::Base
-  attr_accessor :password, :password_confirmation
+  attr_accessor :password_confirmation
 
   validates :email, presence: true, format: { with: /\A[^@\s]+@[^@\s]+\.[a-z]{2,}\z/, allow_blank: true }
   validate :password_presence
   validate :password_confirmation_matches_password
 
-  before_save :set_encrypted_password
   before_create :set_jti
 
   def jwt
     Bearer.encode(jti)
+  end
+
+  def password
+    BCrypt::Password.new(encrypted_password)
+  end
+
+  def password=(new_password)
+    self.encrypted_password = BCrypt::Password.create(new_password)
   end
 
   def set_jti
@@ -25,13 +32,7 @@ class User < ActiveRecord::Base
   end
 
   def password_presence
-    errors.add(:base, "Password can't be blank") if password.blank?
-  end
-
-  def set_encrypted_password
-    return if password.blank?
-
-    self.encrypted_password = BCrypt::Password.create(password)
+    errors.add(:base, "Password can't be blank") if encrypted_password.blank?
   end
 
   class << self
