@@ -6,6 +6,15 @@ class User < ActiveRecord::Base
   validate :password_confirmation_matches_password
 
   before_save :set_encrypted_password
+  before_create :set_jti
+
+  def jwt
+    Bearer.encode(jti)
+  end
+
+  def set_jti
+    self.jti = Bearer.create_jti
+  end
 
   private
 
@@ -23,5 +32,13 @@ class User < ActiveRecord::Base
     return if password.blank?
 
     self.encrypted_password = BCrypt::Password.create(password)
+  end
+
+  class << self
+    def by_jti(jwt)
+      jti = Bearer.decode(jwt)
+
+      find_by(jti:)
+    end
   end
 end
