@@ -11,12 +11,7 @@ helpers do
 
   def parsed_params(resource_name, required_params)
     data = request.body.read
-
-    if data.present?
-      @parsed_params = JSON.parse(data)
-    else
-      @parsed_params = params["params"]
-    end
+    @parsed_params = data.present? ? JSON.parse(data) : params["params"]
 
     JSON.parse(@parsed_params.to_json, symbolize_names: true)&.[](resource_name)&.slice(*required_params) || {}
   end
