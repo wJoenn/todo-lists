@@ -1,8 +1,9 @@
 ENV["RAILS_ENV"] ||= "test"
 
-require "rack/test"
-require "database_cleaner/active_record"
 require_relative "../app"
+Bundler.require(:test)
+
+FactoryBot.find_definitions
 
 def app
   Sinatra::Application
@@ -15,6 +16,7 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 
 RSpec.configure do |config|
+  config.include FactoryBot::Syntax::Methods
   config.include Rack::Test::Methods
 
   config.before(:suite) do

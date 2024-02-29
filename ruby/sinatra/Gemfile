@@ -61,6 +61,10 @@ group :development, :test do
   # [https://github.com/DatabaseCleaner/database_cleaner-active_record]
   gem "database_cleaner-active_record"
 
+  # A library for setting up Ruby objects as test data
+  # [https://github.com/thoughtbot/factory_bot]
+  gem "factory_bot", "~> 6.4.6"
+
   # Step-by-step debugging and stack navigation in Pry
   # [https://github.com/deivid-rodriguez/pry-byebug]
   gem "pry-byebug", "~> 3.10.1"
