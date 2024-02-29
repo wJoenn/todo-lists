@@ -3,6 +3,7 @@ require:
   - standard-custom
   - standard-performance
   - rubocop-performance
+  - rubocop-rspec
 
 inherit_gem:
   standard: config/base.yml
@@ -33,6 +34,13 @@ Lint/ShadowingOuterLocalVariable:
 Metrics/MethodLength:
   Enabled: true
   CountAsOne: ["array", "hash", "heredoc", "method_call"]
+
+RSpec/ExampleLength:
+  Enabled: false
+RSpec/MultipleExpectations:
+  Enabled: false
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
 
 Style/BlockDelimiters:
   Enabled: true

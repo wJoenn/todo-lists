@@ -2,8 +2,7 @@ module JwtAuthenticable
   extend ActiveSupport::Concern
 
   included do
-    FILTERED_ATTRIBUTES = %i[encrypted_password jti]
-    self.filter_attributes = FILTERED_ATTRIBUTES
+    self.filter_attributes = %i[encrypted_password jti]
 
     attr_accessor :password_confirmation
 
@@ -30,7 +29,7 @@ module JwtAuthenticable
   end
 
   def to_json
-    as_json.except(*FILTERED_ATTRIBUTES.map(&:to_s)).to_json
+    as_json.except(*self.class.filter_attributes.map(&:to_s)).to_json
   end
 
   private

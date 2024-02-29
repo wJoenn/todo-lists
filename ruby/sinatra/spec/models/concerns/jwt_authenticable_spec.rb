@@ -19,12 +19,6 @@ RSpec.describe JwtAuthenticable do
     end
   end
 
-  describe "::FILTERED_ATTRIBUTES" do
-    it "includes a list of filtered attributes" do
-      expect(User::FILTERED_ATTRIBUTES).to contain_exactly :encrypted_password, :jti
-    end
-  end
-
   describe "::by_jwt" do
     it "returns the User when called with the User jti" do
       found_user = User.by_jwt(user.jwt)

@@ -1,4 +1,4 @@
-RSpec.describe "/tasks", type: :request do
+RSpec.describe "/tasks" do
   let(:user) { create(:user) }
 
   describe "GET /tasks" do

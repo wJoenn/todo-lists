@@ -1,7 +1,7 @@
-RSpec.describe "/current_user", type: :request do
+RSpec.describe "/current_user" do
   describe "GET /current_user" do
     context "with a valid JSON Web Token" do
-      let(:user) { User.create(email: "user@example.com", password: "password") }
+      let(:user) { create(:user) }
 
       before do
         get "/current_user", nil, { "HTTP_AUTHORIZATION" => user.jwt }

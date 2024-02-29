@@ -1,4 +1,4 @@
-RSpec.describe "/users", type: :request do
+RSpec.describe "/users" do
   let(:email) { "user@example.com" }
   let(:password) { "password" }
 
@@ -63,7 +63,7 @@ RSpec.describe "/users", type: :request do
   end
 
   describe "POST /users/sign_in" do
-    let!(:user) { User.create(email:, password:) }
+    let!(:user) { create(:user) }
 
     context "with proper params" do
       before do
@@ -111,7 +111,7 @@ RSpec.describe "/users", type: :request do
   end
 
   describe "DELETE /users/sign_out" do
-    let(:user) { User.create(email:, password:) }
+    let(:user) { create(:user) }
 
     before do
       delete "/users/sign_out", nil, { "HTTP_AUTHORIZATION" => user.jwt }

@@ -51,6 +51,10 @@ group :development do
   # [https://github.com/rubocop/rubocop-performance]
   gem "rubocop-performance", "~> 1.20.2", require: false
 
+  # An extension to RuboCop focused on RSpec-specific analysis
+  # [https://github.com/rubocop/rubocop-rspec]
+  gem "rubocop-rspec", "~> 2.26.1", require: false
+
   # A linter & formatter built on RuboCop that brings the ethos of StandardJS to Ruby
   # [https://github.com/standardrb/standard]
   gem "standard", "~> 1.33.0"

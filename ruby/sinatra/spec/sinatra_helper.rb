@@ -1,6 +1,6 @@
 ENV["RAILS_ENV"] ||= "test"
 
-require_relative "./spec_helper"
+require "spec_helper"
 require_relative "../app"
 Bundler.require(:test)
 
@@ -25,7 +25,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.around(:each) do |example|
+  config.around do |example|
     DatabaseCleaner.cleaning do
       example.run
     end
