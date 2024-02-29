@@ -9,6 +9,9 @@ on:
     paths:
      - ruby/sinatra/**
 
+env:
+  JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+
 jobs:
   fasterer:
     name: Fasterer
