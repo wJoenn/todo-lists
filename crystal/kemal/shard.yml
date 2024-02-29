@@ -1,0 +1,18 @@
+name: kemal
+version: 0.1.0
+
+crystal: '>= 1.11.2'
+
+dependencies:
+  # Fast, Effective, Simple Web Framework
+  # [https://github.com/kemalcr/kemal]
+  kemal:
+    github: kemalcr/kemal
+    version: ~> 1.4.0
+
+development_dependencies:
+  # A static code analysis tool for Crystal
+  # [https://github.com/crystal-ameba/ameba]
+  ameba:
+    github: crystal-ameba/ameba
+    version: ~> 1.6.1
