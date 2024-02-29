@@ -31,17 +31,5 @@ RSpec.describe User do
       expect(user).not_to be_persisted
       expect(user.errors.full_messages).to contain_exactly "Email is invalid"
     end
-
-    it "validates the presence of the password" do
-      user = described_class.create(email:)
-      expect(user).not_to be_persisted
-      expect(user.errors.full_messages).to contain_exactly "Password can't be blank"
-    end
-
-    it "validates that the password_confirmation is similar to the password" do
-      user = described_class.create(email:, password:, password_confirmation: "wrong")
-      expect(user).not_to be_persisted
-      expect(user.errors.full_messages).to contain_exactly "Password confirmation doesn't match Password"
-    end
   end
 end

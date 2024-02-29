@@ -4,7 +4,7 @@ require_relative "config/application"
 helpers do
   def authenticate_user!
     jwt = env["HTTP_AUTHORIZATION"]
-    @current_user = User.by_jti(jwt)
+    @current_user = User.by_jwt(jwt)
 
     halt status 401 if @current_user.nil?
   end
@@ -56,8 +56,8 @@ end
 delete "/users/sign_out" do
   authenticate_user!
 
-  @current_user.set_jti
-  @current_user.save!
+  @current_user.edit_jti
+  @current_user.save
 
   status 200
 end
