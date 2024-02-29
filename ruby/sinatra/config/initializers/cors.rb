@@ -5,7 +5,7 @@ configure do
 end
 
 before do
-  response.headers["Access-Control-Allow-Headers"] = "Authorization"
+  response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-type"
   response.headers["Access-Control-Allow-Methods"] = "GET, PUT, PATCH, POST, DELETE, OPTIONS, HEAD"
   response.headers["Access-Control-Allow-Origin"] = "*"
   response.headers["Access-Control-Expose-Headers"] = "Authorization"
