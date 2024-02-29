@@ -1,5 +1,3 @@
-require "sinatra_helper"
-
 RSpec.describe "/current_user", type: :request do
   describe "GET /current_user" do
     context "with a valid JSON Web Token" do

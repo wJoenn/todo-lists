@@ -1,5 +1,3 @@
-require_relative "../sinatra_helper"
-
 RSpec.describe Task do
   let(:title) { "My task" }
   let(:user) { create(:user) }

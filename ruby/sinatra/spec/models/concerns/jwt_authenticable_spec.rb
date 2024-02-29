@@ -1,5 +1,3 @@
-require_relative "../../sinatra_helper"
-
 RSpec.describe JwtAuthenticable do
   let(:email) { "user@example.com" }
   let(:password) { "password" }

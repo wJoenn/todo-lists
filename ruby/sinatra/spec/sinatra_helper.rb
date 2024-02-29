@@ -1,5 +1,6 @@
 ENV["RAILS_ENV"] ||= "test"
 
+require_relative "./spec_helper"
 require_relative "../app"
 Bundler.require(:test)
 

@@ -1,5 +1,3 @@
-require_relative "../sinatra_helper"
-
 RSpec.describe Bearer, type: :service do
   let(:jti) { described_class.create_jti }
   let(:bearer) { described_class.encode(jti) }

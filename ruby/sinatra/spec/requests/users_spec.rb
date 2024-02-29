@@ -1,5 +1,3 @@
-require_relative "../sinatra_helper"
-
 RSpec.describe "/users", type: :request do
   let(:email) { "user@example.com" }
   let(:password) { "password" }
