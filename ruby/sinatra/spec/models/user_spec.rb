@@ -4,6 +4,15 @@ RSpec.describe User do
   let(:email) { "user@example.com" }
   let(:password) { "password" }
 
+  describe "associations" do
+    it "has many Task" do
+      user = create(:user)
+      create(:task, user:)
+
+      expect(user.tasks).to all be_a Task
+    end
+  end
+
   describe "validations" do
     it "creates a new User with proper params" do
       user = described_class.create(email:, password:)

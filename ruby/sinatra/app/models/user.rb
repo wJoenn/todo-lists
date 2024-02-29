@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
   attr_accessor :password_confirmation
 
+  has_many :tasks
+
   validates :email, presence: true, format: { with: /\A[^@\s]+@[^@\s]+\.[a-z]{2,}\z/, allow_blank: true }
   validate :password_presence
   validate :password_confirmation_matches_password
