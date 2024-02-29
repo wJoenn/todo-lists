@@ -1,10 +1,12 @@
 require_relative "../sinatra_helper"
 
 RSpec.describe "/tasks", type: :request do
+  let(:user) { create(:user) }
+
   describe "GET /tasks" do
     before do
-      Task.create(title: "My task")
-      get "/tasks"
+      create(:task, user:)
+      get "/tasks", nil, { "HTTP_AUTHORIZATION" => user.jwt }
     end
 
     it "returns a JSON array" do
@@ -25,7 +27,7 @@ RSpec.describe "/tasks", type: :request do
   describe "POST /tasks" do
     context "with proper param" do
       before do
-        post "/tasks", params: { task: { title: "My task" } }
+        post "/tasks", { params: { task: { title: "My task" } } }, { "HTTP_AUTHORIZATION" => user.jwt }
       end
 
       it "returns a JSON object" do
@@ -49,7 +51,7 @@ RSpec.describe "/tasks", type: :request do
 
     context "without proper params" do
       before do
-        post "/tasks", params: { task: { title: nil } }
+        post "/tasks", nil, { "HTTP_AUTHORIZATION" => user.jwt }
       end
 
       it "returns a JSON object" do
@@ -74,8 +76,8 @@ RSpec.describe "/tasks", type: :request do
 
   describe "DELETE /tasks/:id" do
     before do
-      task = Task.create(title: "My task")
-      delete "/tasks/#{task.id}"
+      task = create(:task, user:)
+      delete "/tasks/#{task.id}", nil, { "HTTP_AUTHORIZATION" => user.jwt }
     end
 
     it "destroys the instance of Task" do
@@ -88,10 +90,10 @@ RSpec.describe "/tasks", type: :request do
   end
 
   describe "GET /tasks/:id/complete" do
-    let!(:task) { Task.create(title: "My task") }
+    let!(:task) { create(:task, user:) }
 
     before do
-      patch "/tasks/#{task.id}/complete"
+      patch "/tasks/#{task.id}/complete", nil, { "HTTP_AUTHORIZATION" => user.jwt }
     end
 
     it "returns a JSON object" do

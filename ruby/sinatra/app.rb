@@ -11,9 +11,10 @@ helpers do
 
   def parsed_params(resource_name, required_params)
     data = request.body.read
-    @parsed_params = data.present? ? JSON.parse(data) : params["params"]
+    parsed_params = data.present? ? JSON.parse(data) : params["params"]
+    symbolized_params = JSON.parse(parsed_params.to_json, symbolize_names: true)
 
-    JSON.parse(@parsed_params.to_json, symbolize_names: true)&.[](resource_name)&.slice(*required_params) || {}
+    symbolized_params&.[](resource_name)&.slice(*required_params) || {}
   end
 end
 
@@ -62,13 +63,17 @@ delete "/users/sign_out" do
 end
 
 get "/tasks" do
+  authenticate_user!
+
   status 200
-  Task.all.to_json
+  @current_user.tasks.to_json
 end
 
 post "/tasks" do
+  authenticate_user!
+
   task_params = parsed_params(:task, %i[title])
-  task = Task.new(task_params)
+  task = @current_user.tasks.new(task_params)
 
   if task.save
     status 202
@@ -80,14 +85,18 @@ post "/tasks" do
 end
 
 delete "/tasks/:id" do
-  task = Task.find(params["id"])
+  authenticate_user!
+
+  task = @current_user.tasks.find(params["id"])
   task.destroy
 
   status 200
 end
 
 patch "/tasks/:id/complete" do
-  task = Task.find(params["id"])
+  authenticate_user!
+
+  task = @current_user.tasks.find(params["id"])
   task.update(completed: true)
 
   status 200
