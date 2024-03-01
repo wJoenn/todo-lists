@@ -1,0 +1,13 @@
+default: &default
+  host: localhost
+  user: user
+  password: password
+  adapter: postgres
+
+development:
+  <<: *default
+  db: kemal_development
+
+test:
+  <<: *default
+  db: kemal_test

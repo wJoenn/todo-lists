@@ -1,6 +1,6 @@
 # Kemal
 
-- [ ] Models linked to a PostgreSQL database through an ORM
+- [x] Models linked to a PostgreSQL database through an ORM
 - [ ] CRUD actions to create a task, destroy a task, set a task as completed and get all existing tasks
 - [ ] Authentication with encrypted password and Json Web Token for client side auth
 - [ ] Import and export of CSV files containing the tasks

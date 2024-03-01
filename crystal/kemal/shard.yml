@@ -10,6 +10,24 @@ dependencies:
     github: kemalcr/kemal
     version: ~> 1.4.0
 
+  # Crystal ORM using ActiveRecord pattern with flexible query DSL
+  # [https://github.com/imdrasil/jennifer.cr]
+  jennifer:
+    github: imdrasil/jennifer.cr
+    version: "= 0.12.0"
+
+  # A postgres driver for crystal
+  # [https://github.com/will/crystal-pg]
+  pg:
+    github: will/crystal-pg
+    version: ~> 0.28.0
+
+  # Rake-like task manager
+  # [https://github.com/imdrasil/sam.cr]
+  sam:
+    github: imdrasil/sam.cr
+    version: ~> 0.5.0
+
 development_dependencies:
   # A static code analysis tool for Crystal
   # [https://github.com/crystal-ameba/ameba]
