@@ -6,6 +6,8 @@ require "./db/migrations/*"
 
 load_dependencies "jennifer"
 
+require "./db/seed"
+
 Sam.help
 
 # Here you can define your tasks
