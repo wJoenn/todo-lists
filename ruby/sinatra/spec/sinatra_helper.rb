@@ -1,8 +1,12 @@
 ENV["RAILS_ENV"] ||= "test"
 
 require "spec_helper"
-require_relative "../app"
+require 'simplecov'
+SimpleCov.start
+
 Bundler.require(:test)
+
+require_relative "../app"
 
 FactoryBot.find_definitions
 
