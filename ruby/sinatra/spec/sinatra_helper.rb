@@ -1,7 +1,7 @@
 ENV["RAILS_ENV"] ||= "test"
 
 require "spec_helper"
-require 'simplecov'
+require "simplecov"
 SimpleCov.start
 
 Bundler.require(:test)
