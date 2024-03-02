@@ -1,10 +1,7 @@
-Globs:
-  - "**/*.cr"
-  - "!bin"
-  - "!lib"
-
-Documentation/Documentation:
-  Enabled: true
+Excluded:
+  - "bin"
+  - "lib"
+  - "db"
 
 Layout/LineLength:
   Enabled: true

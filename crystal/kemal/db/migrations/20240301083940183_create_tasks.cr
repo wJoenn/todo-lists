@@ -1,8 +1,8 @@
 class CreateTasks < Jennifer::Migration::Base
   def up
     create_table :tasks do |t|
-      t.string :title, { :null => false }
-      t.bool :completed, { :null => false, :default => false }
+      t.string :title, {:null => false}
+      t.bool :completed, {:null => false, :default => false}
 
       t.timestamps
     end
