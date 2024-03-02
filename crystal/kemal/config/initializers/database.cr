@@ -30,11 +30,12 @@ end
 
 Jennifer::Config.configure do |config|
   config.read("config/database.yml", ENV["KEMAL_ENV"])
+  conf.from_uri(ENV["DATABASE_URI"]) if ENV.has_key?("DATABASE_URI")
 
   levels = {
     "development": Log::Severity::Debug,
-    "production": Log::Severity::Error,
-    "test": Log::Severity::None
+    "production":  Log::Severity::Error,
+    "test":        Log::Severity::None,
   }
 
   config.logger = Log.for("db")

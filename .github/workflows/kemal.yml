@@ -1,0 +1,54 @@
+name: Kemal
+
+on:
+  pull_request:
+    paths:
+     - crystal/kemal/**
+  push:
+    branches: [master]
+    paths:
+     - crystal/kemal/**
+
+jobs:
+  ameba:
+    name: Ameba
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Crystal
+        uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: 1.11.2
+      - name: Install shards
+        run: shards install
+        working-directory: ./crystal/kemal
+      - name: Run Ameba
+        run: bin/ameba
+        working-directory: ./crystal/kemal
+
+  Spec:
+    name: Spec
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Crystal
+        uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: 1.11.2
+      - name: Set up PostgreSQL
+        uses: Harmon758/postgresql-action@v1.0.0
+        with:
+          postgresql user: test
+          postgresql password: password
+      - name: Build app
+        run: |
+          shards install
+          KEMAL_ENV=test bin/sam db:setup
+        working-directory: ./crystal/kemal
+        env:
+          DATABASE_URL: 'postgres://test:password@localhost/application_test'
+      - name: Run Spec
+        run: bin/spec
+        working-directory: ./crystal/kemal
+        env:
+          DATABASE_URL: 'postgres://test:password@localhost/application_test'
