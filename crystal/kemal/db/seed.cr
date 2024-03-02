@@ -1,5 +1,7 @@
 Sam.namespace "db" do
   task "seed" do
-    Task.create(title: "My task")
+    task = Task.create(title: "My task")
+    task.update(completed: true)
+    task.destroy
   end
 end
