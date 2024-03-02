@@ -28,8 +28,8 @@ struct DBFormatter < Log::StaticFormatter
   end
 end
 
-Jennifer::Config.configure do |config|
-  config.read("config/database.yml", ENV["KEMAL_ENV"])
+Jennifer::Config.configure do |conf|
+  conf.read("config/database.yml", ENV["KEMAL_ENV"])
   conf.from_uri(ENV["DATABASE_URI"]) if ENV.has_key?("DATABASE_URI")
 
   levels = {
@@ -38,8 +38,8 @@ Jennifer::Config.configure do |config|
     "test":        Log::Severity::None,
   }
 
-  config.logger = Log.for("db")
-  config.logger.level = levels[ENV["KEMAL_ENV"]]
-  # config.logger.backend = Log::IOBackend.new(formatter: Jennifer::Adapter::DBFormatter)
-  config.logger.backend = Log::IOBackend.new(formatter: DBFormatter)
+  conf.logger = Log.for("db")
+  conf.logger.level = levels[ENV["KEMAL_ENV"]]
+  # conf.logger.backend = Log::IOBackend.new(formatter: Jennifer::Adapter::DBFormatter)
+  conf.logger.backend = Log::IOBackend.new(formatter: DBFormatter)
 end
