@@ -31,8 +31,14 @@ end
 Jennifer::Config.configure do |config|
   config.read("config/database.yml", ENV["KEMAL_ENV"])
 
+  levels = {
+    "development": Log::Severity::Debug,
+    "production": Log::Severity::Error,
+    "test": Log::Severity::None
+  }
+
   config.logger = Log.for("db")
-  config.logger.level = ENV["KEMAL_ENV"] == "production" ? Log::Severity::Error : Log::Severity::Debug
+  config.logger.level = levels[ENV["KEMAL_ENV"]]
   # config.logger.backend = Log::IOBackend.new(formatter: Jennifer::Adapter::DBFormatter)
   config.logger.backend = Log::IOBackend.new(formatter: DBFormatter)
 end

@@ -3,9 +3,11 @@ class Task < Jennifer::Model::Base
 
   mapping(
     id: Primary32,
-    title: String,
+    title: String?,
     completed: {type: Bool, default: false},
     created_at: Time?,
     updated_at: Time?,
   )
+
+  validates_presence :title
 end
