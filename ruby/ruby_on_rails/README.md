@@ -1,13 +1,5 @@
 # Ruby on Rails
-Rails is a Ruby web-application framework that includes everything needed to create database-backed web applications according to the [Model-View-Controller](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) (MVC) pattern.
-
-## Stack
-- [devise](https://github.com/heartcombo/devise) handles the `User` model, authentication and password encryption.
-- [devise-jwt](https://github.com/waiting-for-dev/devise-jwt) adds JWT support to `devise`
-- [rubocop](https://rubygems.org/gems/rubocop) for formatting, together with a few plugins; [standard](https://github.com/standardrb/standard), [rubocop-performance](https://github.com/rubocop/rubocop-performance), [rubocop-rails](https://github.com/rubocop/rubocop-rails) and [rubocop-rspec](https://github.com/rubocop/rubocop-rspec)
-- [rspec-rails](https://github.com/rspec/rspec-rails) is used as the testing framwork
-- [factory_bot_rails](https://github.com/thoughtbot/factory_bot_rails) serves as a fixture manager
-- [simplecov](https://github.com/simplecov-ruby/simplecov) covers test coverage measurement
+[Rails](https://github.com/rails/rails) is a Ruby web-application framework that includes everything needed to create database-backed web applications according to the [Model-View-Controller](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) (MVC) pattern.
 
 ## Features
 - [x] Connection to a PostgreSQL database
@@ -30,6 +22,8 @@ gem install bundler
 bundle install
 ```
 
+<br>
+
 Now you'll need to generate a new `devise_jwt_secret_key` secret to be able to launch the application.
 First create a new secret key and copy it somewhere
 ```bash
@@ -43,14 +37,18 @@ rm -rf config/credentials.yml.enc
 
 Then create a new `config/master.key` and a new `config/credentials.yml.enc` with the following command
 ```bash
-EDITOR="code --wait" rails credentials:edit
+EDITOR="code --wait" bundle exec rails credentials:edit
 ```
 
 It should open a new tmp yml file which should already have a `secret_key_base` key. Create a new `devise_jwt_secret_key` below it and paste the rails secret you created earlier then close the file.
 
-You can now run the application.
+<br>
+
+You can now set the database up and run the application.
 ```
-bundle exec rails server # => To run the server
-bundle exec rspec # => To run the tests
-bundle exec rubocop # => To run the formatter
+bundle exec rails db:setup # Creates the database, run the migrations and initialize the seed
+
+bundle exec rails server # => Runs the server
+bundle exec rspec # => Runs the tests
+bundle exec rubocop # => Runs the formatter
 ```
