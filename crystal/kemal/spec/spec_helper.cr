@@ -1,6 +1,6 @@
 ENV["KEMAL_ENV"] = "test"
 
-require "spec"
+require "spec-kemal"
 require "../src/app.cr"
 
 Jennifer::Migration::Runner.migrate

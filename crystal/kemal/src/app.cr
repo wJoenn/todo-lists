@@ -15,14 +15,14 @@ end
 post "/tasks" do |env|
   task_params = env.params.json["task"].as Hash
   title = task_params["title"].as_s?
-  task = Task.new({ title: title })
+  task = Task.new({title: title})
 
   if task.save
-    env.response.status_code = 202
+    env.response.status_code = 201
     task.to_json
   else
     env.response.status_code = 422
-    { errors: task.errors.full_messages }.to_json
+    {errors: task.errors.full_messages}.to_json
   end
 end
 
@@ -32,7 +32,7 @@ before_all "/tasks/:id" do |env|
     task = Task.find(id)
 
     if task.nil?
-      halt env, status_code: 422, response: ({ errors: ["Task must exist"] }.to_json)
+      halt env, status_code: 422, response: ({errors: ["Task must exist"]}.to_json)
     end
 
     env.set "task", task
@@ -46,7 +46,7 @@ delete "/tasks/:id" do |env|
   env.response.status_code = 200
 end
 
-get "/tasks/:id/complete" do |env|
+patch "/tasks/:id/complete" do |env|
   task = env.get("task").as Task
   task.update(completed: true)
 

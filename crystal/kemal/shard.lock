@@ -48,3 +48,7 @@ shards:
     git: https://github.com/imdrasil/sam.cr.git
     version: 0.5.0
 
+  spec-kemal:
+    git: https://github.com/kemalcr/spec-kemal.git
+    version: 1.0.0+git.commit.97733e57c8348d0c8301989aa63471b2a72ea7a3
+
