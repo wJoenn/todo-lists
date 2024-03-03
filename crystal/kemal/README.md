@@ -1,9 +1,12 @@
 # Kemal
+[Kemal](https://github.com/kemalcr/kemal) is a "lightning fast", super simple web framework written for Crystal. It takes inspirations from Ruby's Sinatra framework.
 
-- [x] Models linked to a PostgreSQL database through an ORM
-- [x] CRUD actions to create a task, destroy a task, set a task as completed and get all existing tasks
-- [ ] Authentication with encrypted password and Json Web Token for client side auth
-- [ ] Import and export of CSV files containing the tasks
-- [ ] Transactional tests with fixtures and 100% code coverage
-- [x] Linting & Formating
-- [x] CLI commands for database management
+## Features
+- [x] Connection to a PostgreSQL database
+- [x] Task Model
+- [x] /tasks routes
+- [ ] User Model
+- [ ] JWT authentication
+- [ ] /users routes
+- [ ] Specs and test coverage
+- [x] Formatting
