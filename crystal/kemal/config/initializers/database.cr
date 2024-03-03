@@ -29,8 +29,11 @@ struct DBFormatter < Log::StaticFormatter
 end
 
 Jennifer::Config.configure do |conf|
-  conf.read("config/database.yml", ENV["KEMAL_ENV"])
-  conf.from_uri(ENV["DATABASE_URI"]) if ENV.has_key?("DATABASE_URI")
+  if ENV.has_key?("DATABASE_URL")
+    conf.from_uri(ENV["DATABASE_URL"])
+  else
+    conf.read("config/database.yml", ENV["KEMAL_ENV"])
+  end
 
   levels = {
     "development": Log::Severity::Debug,

@@ -124,7 +124,7 @@ describe "/tasks" do
   end
 end
 
-def completed_task
+private def completed_task
   task = Task.create(title: "My task")
   patch "/tasks/#{task.id}/complete"
 
