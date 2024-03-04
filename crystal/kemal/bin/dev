@@ -1,3 +1,8 @@
 #!/usr/bin/env sh
 
-crystal src/app.cr
+if ! npm list -g | grep nodemon > /dev/null; then
+  echo "Installing nodemon..."
+  npm install -g nodemon
+fi
+
+exec nodemon --exec crystal run --watch src src/app.cr
