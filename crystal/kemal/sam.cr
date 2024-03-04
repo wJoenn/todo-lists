@@ -8,10 +8,9 @@ load_dependencies "jennifer"
 
 require "./db/seed"
 
-Sam.help
+desc "generate a hex64 secret key"
+task "secret" do
+  puts Random::Secure.hex(64)
+end
 
-# Here you can define your tasks
-# desc "with description to be used by help command"
-# task "test" do
-#   puts "ping"
-# end
+Sam.help

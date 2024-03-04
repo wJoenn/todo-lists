@@ -12,6 +12,10 @@ shards:
     git: https://github.com/crystal-lang/crystal-db.git
     version: 0.13.1
 
+  dotenv:
+    git: https://github.com/xtokio/dotenv.git
+    version: 0.1.0+git.commit.f78b1cdb428e877abd8360aed7bb36676dbd6721
+
   exception_page:
     git: https://github.com/crystal-loot/exception_page.git
     version: 0.3.1

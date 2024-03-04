@@ -2,8 +2,6 @@ require "colorize"
 require "jennifer"
 require "jennifer/adapter/postgres"
 
-ENV["KEMAL_ENV"] ||= "development"
-
 struct DBFormatter < Log::StaticFormatter
   def run
     @io << "(#{@entry.data[:time].as_f64.fdiv(1000).round(2)}ms)  ".colorize(:light_cyan)
