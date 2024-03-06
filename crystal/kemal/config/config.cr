@@ -5,5 +5,6 @@ ENV["KEMAL_ENV"] ||= "development"
   Dotenv.load
 {% end %}
 
-require "./initializers/**"
+require "./initializers/*"
+require "../src/services/*"
 require "../src/models/*"
