@@ -100,7 +100,8 @@ CREATE TABLE public.users (
     email character varying(254) NOT NULL,
     password_digest character varying(254) NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    jti character varying(254)
 );
 
 
@@ -171,6 +172,13 @@ ALTER TABLE ONLY public.tasks
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_jti_idx; Type: INDEX; Schema: public; Owner: joenn
+--
+
+CREATE UNIQUE INDEX users_jti_idx ON public.users USING btree (jti);
 
 
 --
