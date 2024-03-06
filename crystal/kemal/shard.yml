@@ -16,6 +16,10 @@ dependencies:
     github: imdrasil/jennifer.cr
     version: "= 0.12.0"
 
+  jwt:
+    github: crystal-community/jwt
+    version: ~> 1.6.1
+
   # A postgres driver for crystal
   # [https://github.com/will/crystal-pg]
   pg:
