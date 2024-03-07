@@ -1,3 +1,5 @@
+require "../spec_helper"
+
 describe "/users" do
   email = "user@example.com"
   password = "password"

@@ -24,11 +24,19 @@ get "/current_user" do |env|
   user.to_json
 end
 
-get "/tasks" do
+get "/tasks" do |env|
+  user = authenticate_user!(env)
+
+  halt env, status_code: 401 if user.nil?
+
   Task.all.to_json
 end
 
 post "/tasks" do |env|
+  user = authenticate_user!(env)
+
+  halt env, status_code: 401 if user.nil?
+
   task_params = env.params.json["task"].as Hash
   title = task_params["title"]?.try &.as_s?
   task = Task.new({title: title})
@@ -56,6 +64,10 @@ before_all "/tasks/:id" do |env|
 end
 
 delete "/tasks/:id" do |env|
+  user = authenticate_user!(env)
+
+  halt env, status_code: 401 if user.nil?
+
   task = env.get("task").as Task
   task.destroy
 
@@ -63,6 +75,10 @@ delete "/tasks/:id" do |env|
 end
 
 patch "/tasks/:id/complete" do |env|
+  user = authenticate_user!(env)
+
+  halt env, status_code: 401 if user.nil?
+
   task = env.get("task").as Task
   task.update(completed: true)
 

@@ -1,3 +1,5 @@
+require "../spec_helper"
+
 describe "/current_user" do
   describe "GET /current_user" do
     context "with a valid JSON Web Token" do

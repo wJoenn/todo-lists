@@ -1,132 +1,201 @@
+require "../spec_helper"
+
 describe "/tasks" do
   describe "GET /tasks" do
-    before_each do
-      Task.create(title: "My task")
-      get "/tasks"
-    end
-
-    it "returns a JSON array" do
-      response.body?.should be_a String
-
-      tasks = Array(NamedTuple(id: Int32)).from_json(response.body)
-      tasks.size.should eq Task.all.count
-    end
-
-    it "returns a list of Task" do
-      data = JSON.parse(response.body)
-      task = data.as_a.first
-
-      task["title"].should eq "My task"
-      task["completed"].should be_false
-    end
-
-    it "returns a HTTP status of success" do
-      response.status.should eq HTTP::Status::OK
-    end
-  end
-
-  describe "POST /tasks" do
-    context "with proper params" do
+    context "when a User is authenticated" do
       before_each do
-        post "/tasks",
-          headers: HTTP::Headers{"Content-Type" => "application/json"},
-          body: {task: {title: "My task"}}.to_json
+        Task.create(title: "My task")
+
+        user = User.new({email: "user@example.com"})
+        user.password = "password"
+        user.save
+
+        get "/tasks", HTTP::Headers{"Authorization" => user.jwt}
       end
 
       it "returns a JSON array" do
         response.body?.should be_a String
-        JSON.parse(response.body).as_h.should be_a Hash(String, JSON::Any)
+
+        tasks = Array(NamedTuple(id: Int32)).from_json(response.body)
+        tasks.size.should eq Task.all.count
       end
 
-      it "creates an instance of Task" do
-        Task.all.count.should eq 1
-      end
-
-      it "returns the new instance of Task" do
+      it "returns a list of Task" do
         data = JSON.parse(response.body)
-        data["title"].should eq "My task"
+        task = data.as_a.first
+
+        task["title"].should eq "My task"
+        task["completed"].should be_false
       end
 
-      it "returns a HTTP status of created" do
-        response.status.should eq HTTP::Status::CREATED
+      it "returns a HTTP status of success" do
+        response.status.should eq HTTP::Status::OK
+      end
+    end
+
+    context "when a User is not authenticated" do
+      it "returns a HTTP status of unauthorized" do
+        get "/tasks"
+        response.status.should eq HTTP::Status::UNAUTHORIZED
       end
     end
   end
 
-  context "without proper params" do
-    before_each do
-      post "/tasks",
-        headers: HTTP::Headers{"Content-Type" => "application/json"},
-        body: {task: {title: nil}}.to_json
+  describe "POST /tasks" do
+    context "when a User is authenticated" do
+      context "with proper params" do
+        before_each do
+          user = User.new({email: "user@example.com"})
+          user.password = "password"
+          user.save
+
+          post "/tasks",
+            headers: HTTP::Headers{"Content-Type" => "application/json", "Authorization" => user.jwt},
+            body: {task: {title: "My task"}}.to_json
+        end
+
+        it "returns a JSON array" do
+          response.body?.should be_a String
+          JSON.parse(response.body).as_h.should be_a Hash(String, JSON::Any)
+        end
+
+        it "creates an instance of Task" do
+          Task.all.count.should eq 1
+        end
+
+        it "returns the new instance of Task" do
+          data = JSON.parse(response.body)
+          data["title"].should eq "My task"
+        end
+
+        it "returns a HTTP status of created" do
+          response.status.should eq HTTP::Status::CREATED
+        end
+      end
+
+      context "without proper params" do
+        before_each do
+          user = User.new({email: "user@example.com"})
+          user.password = "password"
+          user.save
+
+          post "/tasks",
+            headers: HTTP::Headers{"Content-Type" => "application/json", "Authorization" => user.jwt},
+            body: {task: {title: nil}}.to_json
+        end
+
+        it "returns a JSON object" do
+          response.body?.should be_a String
+          JSON.parse(response.body).as_h.should be_a Hash(String, JSON::Any)
+        end
+
+        it "does not create an instance of Task" do
+          Task.all.count.should eq 0
+        end
+
+        it "returns a list of error messages" do
+          data = JSON.parse(response.body)
+          errors = data["errors"].as_a
+          errors.should contain "Title can't be blank"
+        end
+
+        it "returns a HTTP status of unprocessable_entity" do
+          response.status.should eq HTTP::Status::UNPROCESSABLE_ENTITY
+        end
+      end
     end
 
-    it "returns a JSON object" do
-      response.body?.should be_a String
-      JSON.parse(response.body).as_h.should be_a Hash(String, JSON::Any)
-    end
+    context "when a User is not authenticated" do
+      it "returns a HTTP status of unauthorized" do
+        post "/tasks",
+          headers: HTTP::Headers{"Content-Type" => "application/json"},
+          body: {task: {title: "My task"}}.to_json
 
-    it "does not create an instance of Task" do
-      Task.all.count.should eq 0
-    end
-
-    it "returns a list of error messages" do
-      data = JSON.parse(response.body)
-      errors = data["errors"].as_a
-      errors.should contain "Title can't be blank"
-    end
-
-    it "returns a HTTP status of unprocessable_entity" do
-      response.status.should eq HTTP::Status::UNPROCESSABLE_ENTITY
+        response.status.should eq HTTP::Status::UNAUTHORIZED
+      end
     end
   end
 
   describe "DELETE /tasks/:id" do
-    before_each do
-      task = Task.create(title: "My task")
-      delete "/tasks/#{task.id}"
+    context "when a User is authenticated" do
+      before_each do
+        task = Task.create(title: "My task")
+
+        user = User.new({email: "user@example.com"})
+        user.password = "password"
+        user.save
+
+        delete "/tasks/#{task.id}",
+          headers: HTTP::Headers{"Content-Type" => "application/json", "Authorization" => user.jwt}
+      end
+
+      it "destroys the instance of Task" do
+        Task.all.count.should eq 0
+      end
+
+      it "returns a HTTP status of success" do
+        response.status.should eq HTTP::Status::OK
+      end
     end
 
-    it "destroys the instance of Task" do
-      Task.all.count.should eq 0
-    end
+    context "when a User is not authenticated" do
+      it "returns a HTTP status of unauthorized" do
+        task = Task.create(title: "My task")
+        delete "/tasks/#{task.id}", headers: HTTP::Headers{"Content-Type" => "application/json"}
 
-    it "returns a HTTP status of success" do
-      response.status.should eq HTTP::Status::OK
+        response.status.should eq HTTP::Status::UNAUTHORIZED
+      end
     end
   end
 
   describe "PATCH /tasks/:id/complete" do
-    it "returns a JSON array" do
-      completed_task
+    context "when a User is authenticated" do
+      it "returns a JSON array" do
+        completed_task
 
-      response.body?.should be_a String
-      JSON.parse(response.body).as_h.should be_a Hash(String, JSON::Any)
+        response.body?.should be_a String
+        JSON.parse(response.body).as_h.should be_a Hash(String, JSON::Any)
+      end
+
+      it "returns the new instance of Task" do
+        task = completed_task
+
+        data = JSON.parse(response.body)
+        data["id"].should eq task.id
+      end
+
+      it "marks the Task instance as completed" do
+        task = completed_task
+
+        completed = Task.find(task.id).try &.completed
+        completed.should be_true
+      end
+
+      it "returns a HTTP status of success" do
+        completed_task
+        response.status.should eq HTTP::Status::OK
+      end
     end
 
-    it "returns the new instance of Task" do
-      task = completed_task
+    context "when a User is not authenticated" do
+      it "returns a HTTP status of unauthorized" do
+        task = Task.create(title: "My task")
+        patch "/tasks/#{task.id}/complete"
 
-      data = JSON.parse(response.body)
-      data["id"].should eq task.id
-    end
-
-    it "marks the Task instance as completed" do
-      task = completed_task
-
-      completed = Task.find(task.id).try &.completed
-      completed.should be_true
-    end
-
-    it "returns a HTTP status of success" do
-      completed_task
-      response.status.should eq HTTP::Status::OK
+        response.status.should eq HTTP::Status::UNAUTHORIZED
+      end
     end
   end
 end
 
 private def completed_task
   task = Task.create(title: "My task")
-  patch "/tasks/#{task.id}/complete"
+
+  user = User.new({email: "user@example.com"})
+  user.password = "password"
+  user.save
+
+  patch "/tasks/#{task.id}/complete", headers: HTTP::Headers{"Authorization" => user.jwt}
 
   task
 end
