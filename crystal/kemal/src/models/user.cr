@@ -21,7 +21,7 @@ class User < Jennifer::Model::Base
   validates_format :email, /\A[^@\s]+@[^@\s]+\.[a-z]{2,}\z/, allow_blank: true
   validates_with_method :jti_presence
 
-  def self.by_jwt(jwt) : User | Nil
+  def self.by_jwt(jwt : String) : User | Nil
     jti = Bearer.decode(jwt)
 
     where({:jti => jti}).limit(1).first

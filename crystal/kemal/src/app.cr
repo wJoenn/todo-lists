@@ -4,11 +4,11 @@ require "../config/config"
 Kemal.config.host_binding = "::1"
 add_context_storage_type(Task)
 
-def authenticate_user!(env : HTTP::Server::Context) : User| Nil
-  jwt = env.request.headers["AUTHORIZATION"]
-  user = User.by_jwt(jwt)
+def authenticate_user!(env : HTTP::Server::Context) : User | Nil
+  jwt = env.request.headers["AUTHORIZATION"]?
+  return unless jwt
 
-  user
+  User.by_jwt(jwt)
 end
 
 before_all do |env|
@@ -86,7 +86,7 @@ post "/users" do |env|
     user.to_json
   else
     env.response.status_code = 422
-    { errors: user.errors.full_messages }.to_json
+    {errors: user.errors.full_messages}.to_json
   end
 end
 
@@ -103,7 +103,7 @@ post "/users/sign_in" do |env|
     user.to_json
   else
     env.response.status_code = 401
-    { errors: ["Invalid Email or Password"] }.to_json
+    {errors: ["Invalid Email or Password"]}.to_json
   end
 end
 
