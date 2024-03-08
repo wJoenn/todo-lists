@@ -17,6 +17,8 @@ class User < Jennifer::Model::Base
     updated_at: Time?,
   )
 
+  has_many :tasks, Task, dependent: :destroy
+
   validates_presence :email
   validates_format :email, /\A[^@\s]+@[^@\s]+\.[a-z]{2,}\z/, allow_blank: true
   validates_with_method :jti_presence

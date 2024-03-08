@@ -4,11 +4,11 @@ describe "/tasks" do
   describe "GET /tasks" do
     context "when a User is authenticated" do
       before_each do
-        Task.create(title: "My task")
-
         user = User.new({email: "user@example.com"})
         user.password = "password"
         user.save
+
+        Task.create(title: "My task", user_id: user.id)
 
         get "/tasks", HTTP::Headers{"Authorization" => user.jwt}
       end
@@ -119,11 +119,11 @@ describe "/tasks" do
   describe "DELETE /tasks/:id" do
     context "when a User is authenticated" do
       before_each do
-        task = Task.create(title: "My task")
-
         user = User.new({email: "user@example.com"})
         user.password = "password"
         user.save
+
+        task = Task.create(title: "My task", user_id: user.id)
 
         delete "/tasks/#{task.id}",
           headers: HTTP::Headers{"Content-Type" => "application/json", "Authorization" => user.jwt}
@@ -140,7 +140,11 @@ describe "/tasks" do
 
     context "when a User is not authenticated" do
       it "returns a HTTP status of unauthorized" do
-        task = Task.create(title: "My task")
+        user = User.new({email: "user@example.com"})
+        user.password = "password"
+        user.save
+
+        task = Task.create(title: "My task", user_id: user.id)
         delete "/tasks/#{task.id}", headers: HTTP::Headers{"Content-Type" => "application/json"}
 
         response.status.should eq HTTP::Status::UNAUTHORIZED
@@ -179,7 +183,12 @@ describe "/tasks" do
 
     context "when a User is not authenticated" do
       it "returns a HTTP status of unauthorized" do
-        task = Task.create(title: "My task")
+        user = User.new({email: "user@example.com"})
+        user.password = "password"
+        user.save
+
+        task = Task.create(title: "My task", user_id: user.id)
+
         patch "/tasks/#{task.id}/complete"
 
         response.status.should eq HTTP::Status::UNAUTHORIZED
@@ -189,11 +198,11 @@ describe "/tasks" do
 end
 
 private def completed_task
-  task = Task.create(title: "My task")
-
   user = User.new({email: "user@example.com"})
   user.password = "password"
   user.save
+
+  task = Task.create(title: "My task", user_id: user.id)
 
   patch "/tasks/#{task.id}/complete", headers: HTTP::Headers{"Authorization" => user.jwt}
 

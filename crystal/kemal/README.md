@@ -8,5 +8,6 @@
 - [x] User Model
 - [x] JWT authentication
 - [x] /users routes
-- [ ] Specs and test coverage
+- [ ] Working demo
+- [x] Specs and test coverage
 - [x] Formatting

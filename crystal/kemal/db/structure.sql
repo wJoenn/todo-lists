@@ -63,7 +63,8 @@ CREATE TABLE public.tasks (
     title character varying(254) NOT NULL,
     completed boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    user_id integer NOT NULL
 );
 
 
@@ -179,6 +180,14 @@ ALTER TABLE ONLY public.users
 --
 
 CREATE UNIQUE INDEX users_jti_idx ON public.users USING btree (jti);
+
+
+--
+-- Name: tasks fk_cr_4d2a9e4d7e; Type: FK CONSTRAINT; Schema: public; Owner: joenn
+--
+
+ALTER TABLE ONLY public.tasks
+    ADD CONSTRAINT fk_cr_4d2a9e4d7e FOREIGN KEY (user_id) REFERENCES public.users(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
 --

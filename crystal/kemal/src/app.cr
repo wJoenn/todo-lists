@@ -29,7 +29,7 @@ get "/tasks" do |env|
 
   halt env, status_code: 401 if user.nil?
 
-  Task.all.to_json
+  user.tasks.to_json
 end
 
 post "/tasks" do |env|
@@ -39,7 +39,7 @@ post "/tasks" do |env|
 
   task_params = env.params.json["task"].as Hash
   title = task_params["title"]?.try &.as_s?
-  task = Task.new({title: title})
+  task = Task.new({title: title, user_id: user.id})
 
   if task.save
     env.response.status_code = 201
@@ -52,8 +52,12 @@ end
 
 before_all "/tasks/:id" do |env|
   if env.params.url["id"]?
+    user = authenticate_user!(env)
+
+    halt env, status_code: 401 if user.nil?
+
     id = env.params.url["id"]
-    task = Task.find(id)
+    task = user.tasks.find { |t| t.id == id.to_i }
 
     if task.nil?
       halt env, status_code: 422, response: ({errors: ["Task must exist"]}.to_json)
@@ -64,10 +68,6 @@ before_all "/tasks/:id" do |env|
 end
 
 delete "/tasks/:id" do |env|
-  user = authenticate_user!(env)
-
-  halt env, status_code: 401 if user.nil?
-
   task = env.get("task").as Task
   task.destroy
 
@@ -75,10 +75,6 @@ delete "/tasks/:id" do |env|
 end
 
 patch "/tasks/:id/complete" do |env|
-  user = authenticate_user!(env)
-
-  halt env, status_code: 401 if user.nil?
-
   task = env.get("task").as Task
   task.update(completed: true)
 

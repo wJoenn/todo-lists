@@ -4,6 +4,15 @@ describe User do
   email = "user@example.com"
   password = "password"
 
+  describe "associations" do
+    it "has many Task" do
+      user = create_user(email, password)
+      Task.create(title: "My task", user_id: user.id)
+
+      user.tasks.should be_a Array(Task)
+    end
+  end
+
   describe "validations" do
     it "creates a new User with proper params" do
       user = create_user(email, password)
