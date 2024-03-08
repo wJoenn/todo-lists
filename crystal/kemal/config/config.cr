@@ -5,6 +5,9 @@ ENV["KEMAL_ENV"] ||= "development"
   Dotenv.load
 {% end %}
 
+require "kemal"
+require "uuid"
+
 require "./initializers/*"
 require "../src/services/*"
 require "../src/models/*"

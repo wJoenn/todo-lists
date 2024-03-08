@@ -1,48 +1,38 @@
 name: kemal
 version: 0.1.0
 
-crystal: '>= 1.11.2'
+crystal: '1.11.2'
 
 dependencies:
-  # Fast, Effective, Simple Web Framework
-  # [https://github.com/kemalcr/kemal]
-  kemal:
+  kemal: # Fast, Effective, Simple Web Framework
     github: kemalcr/kemal
     version: ~> 1.4.0
 
-  # Crystal ORM using ActiveRecord pattern with flexible query DSL
-  # [https://github.com/imdrasil/jennifer.cr]
-  jennifer:
+  jennifer: # Crystal ORM using ActiveRecord pattern with flexible query DSL
     github: imdrasil/jennifer.cr
     version: "= 0.12.0"
 
-  jwt:
+  jwt: # JWT implementation in Crystal
     github: crystal-community/jwt
     version: ~> 1.6.1
 
-  # A postgres driver for crystal
-  # [https://github.com/will/crystal-pg]
-  pg:
+  pg: # A postgres driver for crystal
     github: will/crystal-pg
     version: ~> 0.28.0
 
-  # Rake-like task manager
-  # [https://github.com/imdrasil/sam.cr]
-  sam:
+  sam: # Rake-like task manager
     github: imdrasil/sam.cr
     version: ~> 0.5.0
 
 development_dependencies:
-  # A static code analysis tool for Crystal
-  # [https://github.com/crystal-ameba/ameba]
-  ameba:
+  ameba: # A static code analysis tool for Crystal
     github: crystal-ameba/ameba
     version: ~> 1.6.1
 
-  dotenv:
+  dotenv: # Simple Crystal lang .env file loader
     github: xtokio/dotenv
     branch: master
 
-  spec-kemal:
+  spec-kemal: # Kemal helpers to Crystal's spec for easy testing
     github: kemalcr/spec-kemal
     branch: master

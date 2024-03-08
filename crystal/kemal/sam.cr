@@ -3,10 +3,9 @@
 require "./config/*"
 require "sam"
 require "./db/migrations/*"
+require "./db/seed"
 
 load_dependencies "jennifer"
-
-require "./db/seed"
 
 desc "generate a hex64 secret key"
 task "secret" do

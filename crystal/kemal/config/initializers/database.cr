@@ -4,13 +4,14 @@ require "jennifer/adapter/postgres"
 
 struct DBFormatter < Log::StaticFormatter
   def run
-    @io << "(#{@entry.data[:time].as_f64.fdiv(1000).round(2)}ms)  ".colorize(:light_cyan)
+    latency = @entry.data[:time].as_f64.fdiv(1000).round(2)
+    @io << "(#{latency}ms)  ".colorize(:light_cyan)
 
     query = @entry.data[:query].as_s
     @io << colorized_query(query)
 
     args = @entry.data[:args]?.try &.as_a
-    @io << "  [#{args}]" if args.present? && !args.try &.empty?
+    @io << "  [#{args}]" if args && !args.empty?
   end
 
   private def colorized_query(query)
@@ -41,6 +42,5 @@ Jennifer::Config.configure do |conf|
 
   conf.logger = Log.for("db")
   conf.logger.level = levels[ENV["KEMAL_ENV"]]
-  # conf.logger.backend = Log::IOBackend.new(formatter: Jennifer::Adapter::DBFormatter)
   conf.logger.backend = Log::IOBackend.new(formatter: DBFormatter)
 end

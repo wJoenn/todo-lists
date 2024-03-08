@@ -1,4 +1,3 @@
-require "kemal"
 require "../config/config"
 
 Kemal.config.host_binding = "::1"
