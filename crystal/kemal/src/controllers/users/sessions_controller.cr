@@ -16,7 +16,6 @@ class Users::SessionsController < ApplicationController
     current_user.edit_jti
     current_user.save
     response.status_code = 200
-    return
   end
 
   private def user_params : NamedTuple
