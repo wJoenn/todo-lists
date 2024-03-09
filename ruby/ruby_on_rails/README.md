@@ -46,10 +46,10 @@ It should open a new tmp yml file which should already have a `secret_key_base` 
 <br>
 
 You can now set the database up and run the application.
-```
+```bash
 bundle exec rails db:setup # Creates the database, run the migrations and initialize the seed
 
-bundle exec rails server # => Runs the server
-bundle exec rspec # => Runs the tests
-bundle exec rubocop # => Runs the formatter
+bundle exec rails server # Runs the server
+bundle exec rspec # Runs the tests
+bundle exec rubocop # Runs the formatter
 ```
