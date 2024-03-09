@@ -3,6 +3,8 @@ require "jennifer/model/authentication"
 class User < Jennifer::Model::Base
   include Jennifer::Model::Authentication
 
+  FILTERED_KEYS = %i[jti password password_digest password_confirmation]
+
   with_authentication
   with_timestamps
 
@@ -34,5 +36,9 @@ class User < Jennifer::Model::Base
 
   def jwt : String
     Bearer.encode(jti)
+  end
+
+  def to_json : String
+    to_h.reject(FILTERED_KEYS).to_json
   end
 end

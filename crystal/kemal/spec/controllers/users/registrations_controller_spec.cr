@@ -73,7 +73,7 @@ describe Users::RegistrationsController do
       end
 
       it "returns a Authorization header" do
-        response.headers["Authorization"].should eq User.all.first.not_nil!.jwt
+        response.headers["Authorization"].should eq User.all.first.try &.jwt
       end
     end
 

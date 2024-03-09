@@ -67,7 +67,7 @@ describe User do
       found_user = User.by_jwt(user.jwt)
 
       found_user.should_not be_nil
-      found_user.not_nil!.id.should eq user.id
+      found_user.try &.id.should eq user.id
     end
 
     it "returns nil when called with an incorrect jti" do
@@ -89,6 +89,25 @@ describe User do
     it "returns a Bearer User token" do
       user = create_user(email, password)
       user.jwt.should match(/^Bearer .+/)
+    end
+  end
+
+  describe "#to_json" do
+    data = {} of String => JSON::Any
+
+    before_each do
+      user = create_user(email, password)
+      data = JSON.parse(user.to_json).as_h
+    end
+
+    it "does not render the User's password" do
+      %w[password password_confirmation password_digest].each do |key|
+        data.has_key?(key).should be_false
+      end
+    end
+
+    it "does not render the User's jti" do
+      data.has_key?("jti").should be_false
     end
   end
 end
