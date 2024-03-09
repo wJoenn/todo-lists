@@ -9,7 +9,7 @@
 - [x] JWT authentication
 - [x] /users routes
 - [x] Working demo
-- [x] Specs and test coverage
+- [x] Specs and ~~test coverage~~ (no existing coverage shard)
 - [x] Formatting
 
 ## Installation
