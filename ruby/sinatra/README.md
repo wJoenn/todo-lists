@@ -36,7 +36,7 @@ Then create a new `.env` file, create a new `JWT_SECRET_KEY` and paste the secre
 <br>
 
 You can now set the database up and run the application.
-```
+```bash
 bin/sinatra db:setup # Creates the database, run the migrations and initialize the seed
 
 bin/dev # Runs the server
