@@ -23,63 +23,10 @@ get "/current_user" do |env|
   user.to_json
 end
 
-get "/tasks" do |env|
-  user = authenticate_user!(env)
-
-  halt env, status_code: 401 if user.nil?
-
-  user.tasks.to_json
-end
-
-post "/tasks" do |env|
-  user = authenticate_user!(env)
-
-  halt env, status_code: 401 if user.nil?
-
-  task_params = env.params.json["task"].as Hash
-  title = task_params["title"]?.try &.as_s?
-  task = Task.new({title: title, user_id: user.id})
-
-  if task.save
-    env.response.status_code = 201
-    task.to_json
-  else
-    env.response.status_code = 422
-    {errors: task.errors.full_messages}.to_json
-  end
-end
-
-before_all "/tasks/:id" do |env|
-  if env.params.url["id"]?
-    user = authenticate_user!(env)
-
-    halt env, status_code: 401 if user.nil?
-
-    id = env.params.url["id"]
-    task = user.tasks.find { |t| t.id == id.to_i }
-
-    if task.nil?
-      halt env, status_code: 422, response: ({errors: ["Task must exist"]}.to_json)
-    end
-
-    env.set "task", task
-  end
-end
-
-delete "/tasks/:id" do |env|
-  task = env.get("task").as Task
-  task.destroy
-
-  env.response.status_code = 200
-end
-
-patch "/tasks/:id/complete" do |env|
-  task = env.get("task").as Task
-  task.update(completed: true)
-
-  env.response.status_code = 200
-  task.to_json
-end
+get "/tasks" { |env| TasksController.authenticate?(env).try &.index }
+post "/tasks" { |env| TasksController.authenticate?(env).try &.create }
+delete "/tasks/:id" { |env| TasksController.authenticate?(env).try &.destroy }
+patch "/tasks/:id/complete" { |env| TasksController.authenticate?(env).try &.complete }
 
 post "/users" do |env|
   user_params = env.params.json["user"].as Hash
