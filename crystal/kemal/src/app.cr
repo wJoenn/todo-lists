@@ -14,4 +14,5 @@ post "/users/sign_in" { |env| Users::SessionsController.new(env).create }
 delete "/users/sign_out" { |env| Users::SessionsController.authenticate?(env).try &.destroy }
 
 Kemal.config.host_binding = "::1"
+Kemal.config.port = ENV["PORT"].to_i || 3000
 Kemal.run

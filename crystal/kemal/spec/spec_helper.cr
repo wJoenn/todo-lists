@@ -1,4 +1,5 @@
 ENV["KEMAL_ENV"] = "test"
+ENV["PORT"] = "9999"
 
 require "spec-kemal"
 require "../src/app.cr"
