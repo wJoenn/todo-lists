@@ -22,8 +22,7 @@ class TasksController < ApplicationController
 
     if task
       task.destroy
-      response.status_code = 200
-      return
+      return response.status_code = 200
     end
 
     response.status_code = 422
