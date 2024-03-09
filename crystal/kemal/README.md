@@ -39,7 +39,7 @@ You'll also need create a new `config/database.yml` file, copy the content of th
 <br>
 
 You can now set the database up and run the application.
-```
+```bash
 bin/sam db:setup # Creates the database, run the migrations and initialize the seed
 KEMAL_ENV=test bin/sam db:setup # test database needs to be created separately
 
