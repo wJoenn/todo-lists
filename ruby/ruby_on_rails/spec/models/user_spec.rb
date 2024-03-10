@@ -46,6 +46,14 @@ RSpec.describe User do
     end
   end
 
+  describe "JSON Web Token" do
+    it "expires after 30 days" do
+      user = create(:user)
+      _, payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, "JWT_AUD")
+      expect(Time.at(payload["exp"]).to_date).to eq 30.days.from_now.to_date
+    end
+  end
+
   describe "#to_json" do
     let(:user) { create(:user) }
     let(:data) { JSON.parse(user.to_json) }

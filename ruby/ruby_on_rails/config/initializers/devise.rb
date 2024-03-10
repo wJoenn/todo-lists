@@ -313,6 +313,7 @@ Devise.setup do |config|
   # config.sign_in_after_change_password = true
 
   config.jwt do |jwt|
+    jwt.expiration_time = 3600 * 24 * 30
     jwt.secret = Rails.application.credentials.devise_jwt_secret_key!
   end
 end
