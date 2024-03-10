@@ -2,21 +2,6 @@ require "sinatra"
 require_relative "config/application"
 
 helpers do
-  def authenticate_user!
-    jwt = env["HTTP_AUTHORIZATION"]
-    @current_user = User.by_jwt(jwt)
-
-    halt status 401 if @current_user.nil?
-  end
-
-  def parsed_params(resource_name, required_params)
-    data = request.body.read
-    parsed_params = data.present? ? JSON.parse(data) : params["params"]
-    symbolized_params = JSON.parse(parsed_params.to_json, symbolize_names: true)
-
-    symbolized_params&.[](resource_name)&.slice(*required_params) || {}
-  end
-
   def env
     request.params.merge!(params)
     OpenStruct.new({ request:, response: }.merge(request.env))
@@ -30,28 +15,7 @@ patch("/tasks/:id/complete") { TasksController.authenticate(env)&.complete }
 
 get("/current_user") { Users::RegistrationsController.authenticate(env)&.show }
 post("/users") { Users::RegistrationsController.new(env).create }
-
-post "/users/sign_in" do
-  user_params = parsed_params(:user, %i[email password])
-  user = User.find_by(email: user_params[:email])
-
-  if user.present? && user.password == user_params[:password]
-    status 200
-    response.headers["Authorization"] = user.jwt
-    user.to_json
-  else
-    status 401
-    { errors: ["Invalid Email or Password"] }.to_json
-  end
-end
-
-delete "/users/sign_out" do
-  authenticate_user!
-
-  @current_user.edit_jti
-  @current_user.save
-
-  status 200
-end
+post("/users/sign_in") { Users::SessionsController.new(env).create }
+delete("/users/sign_out") { Users::SessionsController.authenticate(env)&.destroy }
 
 set :port, 3000

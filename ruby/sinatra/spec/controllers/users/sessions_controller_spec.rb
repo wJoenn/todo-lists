@@ -1,4 +1,4 @@
-RSpec.describe "/users" do
+RSpec.describe Users::SessionsController do
   let(:email) { "user@example.com" }
   let(:password) { "password" }
 
