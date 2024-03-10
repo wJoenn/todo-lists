@@ -23,31 +23,13 @@ helpers do
   end
 end
 
-get "/current_user" do
-  authenticate_user!
-
-  status 200
-  @current_user.to_json
-end
-
 get("/tasks") { TasksController.authenticate(env)&.index }
 post("/tasks") { TasksController.authenticate(env)&.create }
 delete("/tasks/:id") { TasksController.authenticate(env)&.destroy }
 patch("/tasks/:id/complete") { TasksController.authenticate(env)&.complete }
 
-post "/users" do
-  user_params = parsed_params(:user, %i[email password password_confirmation])
-  user = User.new(user_params)
-
-  if user.save
-    status 201
-    response.headers["Authorization"] = user.jwt
-    user.to_json
-  else
-    status 422
-    { errors: user.errors.full_messages }.to_json
-  end
-end
+get("/current_user") { Users::RegistrationsController.authenticate(env)&.show }
+post("/users") { Users::RegistrationsController.new(env).create }
 
 post "/users/sign_in" do
   user_params = parsed_params(:user, %i[email password])
