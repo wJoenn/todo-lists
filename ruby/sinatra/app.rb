@@ -16,6 +16,11 @@ helpers do
 
     symbolized_params&.[](resource_name)&.slice(*required_params) || {}
   end
+
+  def env
+    request.params.merge!(params)
+    OpenStruct.new({ request:, response: }.merge(request.env))
+  end
 end
 
 get "/current_user" do
@@ -25,46 +30,10 @@ get "/current_user" do
   @current_user.to_json
 end
 
-get "/tasks" do
-  authenticate_user!
-
-  status 200
-  @current_user.tasks.to_json
-end
-
-post "/tasks" do
-  authenticate_user!
-
-  task_params = parsed_params(:task, %i[title])
-  task = @current_user.tasks.new(task_params)
-
-  if task.save
-    status 201
-    task.to_json
-  else
-    status 422
-    { errors: task.errors.full_messages }.to_json
-  end
-end
-
-delete "/tasks/:id" do
-  authenticate_user!
-
-  task = @current_user.tasks.find(params["id"])
-  task.destroy
-
-  status 200
-end
-
-patch "/tasks/:id/complete" do
-  authenticate_user!
-
-  task = @current_user.tasks.find(params["id"])
-  task.update(completed: true)
-
-  status 200
-  task.to_json
-end
+get("/tasks") { TasksController.authenticate(env)&.index }
+post("/tasks") { TasksController.authenticate(env)&.create }
+delete("/tasks/:id") { TasksController.authenticate(env)&.destroy }
+patch("/tasks/:id/complete") { TasksController.authenticate(env)&.complete }
 
 post "/users" do
   user_params = parsed_params(:user, %i[email password password_confirmation])

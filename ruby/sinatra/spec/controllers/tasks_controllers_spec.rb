@@ -1,4 +1,4 @@
-RSpec.describe "/tasks" do
+RSpec.describe TasksController, type: :request do
   let(:title) { "My task" }
   let(:user) { create(:user) }
 
