@@ -103,8 +103,4 @@ delete "/users/sign_out" do
   status 200
 end
 
-options "*" do
-  200
-end
-
 set :port, 3000
