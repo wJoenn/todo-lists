@@ -6,6 +6,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :validatable,
     :jwt_authenticatable, jwt_revocation_strategy: self
 
+  UNSAFE_ATTRIBUTES_FOR_SERIALIZATION << :jti
+
   has_many :tasks, dependent: :destroy
 
   def serialize
