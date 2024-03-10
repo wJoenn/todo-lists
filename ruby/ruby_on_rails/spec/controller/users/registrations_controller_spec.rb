@@ -27,7 +27,7 @@ RSpec.describe Users::RegistrationsController, type: :request do
       end
 
       it "returns a Authorization header" do
-        expect(response["Authorization"]).to match(/Bearer .+/)
+        expect(response["Authorization"]).to match(/^Bearer .+/)
       end
     end
 
