@@ -9,11 +9,4 @@ class User < ApplicationRecord
   UNSAFE_ATTRIBUTES_FOR_SERIALIZATION << :jti
 
   has_many :tasks, dependent: :destroy
-
-  def serialize
-    {
-      id: id,
-      email: email
-    }
-  end
 end

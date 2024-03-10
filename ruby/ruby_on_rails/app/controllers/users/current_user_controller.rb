@@ -1,5 +1,5 @@
 class Users::CurrentUserController < ApplicationController
-  def index
-    render json: current_user.serialize, status: :ok
+  def show
+    render json: current_user, status: :ok
   end
 end

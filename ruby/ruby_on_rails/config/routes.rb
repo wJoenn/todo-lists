@@ -8,7 +8,7 @@ Rails.application.routes.draw do
     registrations: "users/registrations"
   }
 
-  get "/current_user", to: "users/current_user#index"
+  get "/current_user", to: "users/current_user#show"
 
   resources :tasks, only: %i[index create destroy] do
     member do
