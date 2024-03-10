@@ -50,7 +50,7 @@ RSpec.describe User do
     it "expires after 30 days" do
       user = create(:user)
       _, payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, "JWT_AUD")
-      expect(Time.at(payload["exp"]).to_date).to eq 30.days.from_now.to_date
+      expect(Time.zone.at(payload["exp"]).to_date).to eq 30.days.from_now.to_date
     end
   end
 
