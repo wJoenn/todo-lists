@@ -13,7 +13,7 @@ module JwtAuthenticable
   end
 
   def edit_jti
-    self.jti = Bearer.create_jti
+    self.jti = Bearer.jti
   end
 
   def jwt
