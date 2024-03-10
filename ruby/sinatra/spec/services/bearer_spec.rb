@@ -20,6 +20,13 @@ RSpec.describe Bearer, type: :service do
     it "encodes a jti into a Json Web Token" do
       expect(bearer).to match(/^Bearer \w+/)
     end
+
+    it "adds an expiration date of 30 days" do
+      jwt = bearer.gsub(/^Bearer /, "")
+      payload, _ = JWT.decode jwt, ENV["JWT_SECRET_KEY"], true, { algorithm: "HS256" }
+
+      expect(Time.at(payload["exp"]).to_date).to eq Date.today + 30
+    end
   end
 
   describe "::jti" do

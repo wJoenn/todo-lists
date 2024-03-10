@@ -10,7 +10,7 @@ class Bearer
     end
 
     def encode(jti)
-      payload = { jti: }
+      payload = { jti:, exp: Time.now.to_i + 3600 * 24 * 30 }
       jwt = JWT.encode payload, ENV["JWT_SECRET_KEY"], "HS256"
 
       "Bearer #{jwt}"
