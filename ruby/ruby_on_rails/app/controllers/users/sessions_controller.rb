@@ -13,6 +13,8 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def destroy
+    return render status: :unauthorized if all_signed_out?
+
     Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name)
     render status: :ok
   end

@@ -1,18 +1,11 @@
-require "rails_helper"
-
 RSpec.describe Users::RegistrationsController, type: :request do
+  let(:email) { "user@example.com" }
+  let(:password) { "password" }
+
   describe "POST /users" do
     context "with proper params" do
-      let(:email) { "user@example.com" }
-
       before do
-        post "/users", params: {
-          user: {
-            email:,
-            password: "foobar",
-            password_confirmation: "foobar"
-          }
-        }
+        post "/users", params: { user: { email:, password:, password_confirmation: password } }
       end
 
       it "returns a JSON object" do
@@ -29,18 +22,18 @@ RSpec.describe Users::RegistrationsController, type: :request do
         expect(data["email"]).to eq email
       end
 
-      it "returns a HTTP status of created" do
+      it "returns a created HTTP status" do
         expect(response).to have_http_status :created
       end
 
       it "returns a Authorization header" do
-        expect(response["Authorization"]).to be_present
+        expect(response["Authorization"]).to match(/Bearer .+/)
       end
     end
 
     context "without proper params" do
       before do
-        post "/users"
+        post "/users", params: { user: { email: nil, password: nil } }
       end
 
       it "returns a JSON object" do
@@ -57,7 +50,7 @@ RSpec.describe Users::RegistrationsController, type: :request do
         expect(data["errors"]).to contain_exactly("Email can't be blank", "Password can't be blank")
       end
 
-      it "returns a HTTP status of unprocessable_entity" do
+      it "returns a unprocessable_entity HTTP status" do
         expect(response).to have_http_status :unprocessable_entity
       end
     end

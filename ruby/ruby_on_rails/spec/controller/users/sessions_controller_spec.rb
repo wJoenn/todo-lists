@@ -1,5 +1,3 @@
-require "rails_helper"
-
 RSpec.describe Users::SessionsController, type: :request do
   let(:user) { create(:user) }
 
@@ -16,21 +14,21 @@ RSpec.describe Users::SessionsController, type: :request do
 
       it "returns the instance of User" do
         data = response.parsed_body
-        expect(data["email"]).to eq user.email
+        expect(data["id"]).to be user.id
       end
 
-      it "returns a HTTP status of ok" do
+      it "returns a ok HTTP status" do
         expect(response).to have_http_status :ok
       end
 
       it "returns a Authorization header" do
-        expect(response["Authorization"]).to be_present
+        expect(response["Authorization"]).to match(/Bearer .+/)
       end
     end
 
     context "without proper params" do
       before do
-        post "/users/sign_in"
+        post "/users/sign_in", params: { user: { email: nil, password: nil } }
       end
 
       it "returns a JSON object" do
@@ -43,25 +41,35 @@ RSpec.describe Users::SessionsController, type: :request do
         expect(data["errors"]).to contain_exactly "Invalid Email or Password"
       end
 
-      it "returns a HTTP status of unauthorized" do
+      it "returns a unauthorized HTTP status" do
         expect(response).to have_http_status :unauthorized
       end
     end
   end
 
   describe "DELETE /users/sign_out" do
-    before do
-      sign_in user
-      delete "/users/sign_out"
+    context "when a User is authenticated" do
+      before do
+        sign_in user
+        delete "/users/sign_out"
+      end
+
+      it "signs the User out" do
+        get "/current_user"
+        expect(response).to have_http_status :unauthorized
+      end
+
+      it "returns a ok HTTP status" do
+        expect(response).to have_http_status :ok
+      end
     end
 
-    it "signs the User out" do
-      get "/tasks"
-      expect(response).to have_http_status :unauthorized
-    end
+    context "when a User is not authenticated" do
+      it "returns a unauthorized HTTP status" do
+        delete "/users/sign_out"
 
-    it "returns a HTTP status of ok" do
-      expect(response).to have_http_status :ok
+        expect(response).to have_http_status :unauthorized
+      end
     end
   end
 end

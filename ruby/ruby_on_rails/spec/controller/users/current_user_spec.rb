@@ -1,25 +1,14 @@
-require "rails_helper"
-
 RSpec.describe "Users::CurrentUsers", type: :request do
   describe "GET /current_user" do
-    context "with a valid JSON Web Token" do
+    context "when a User is authenticated" do
       let(:user) { create(:user) }
-
-      let(:jwt_token) do
-        token = {
-          sub: user.id,
-          scp: "user",
-          aud: nil,
-          iat: Time.current.to_i,
-          exp: 1.month.from_now.to_i,
-          jti: user.jti
-        }
-
+      let(:jwt) do
+        token = { jti: user.jti, scp: "user", sub: user.id }
         JWT.encode(token, Rails.application.credentials.devise_jwt_secret_key!)
       end
 
       before do
-        get "/current_user", headers: { Authorization: "Bearer #{jwt_token}" }
+        get "/current_user", headers: { Authorization: "Bearer #{jwt}" }
       end
 
       it "returns a JSON object" do
@@ -29,16 +18,16 @@ RSpec.describe "Users::CurrentUsers", type: :request do
 
       it "returns the instance of User" do
         data = response.parsed_body
-        expect(data["email"]).to eq user.email
+        expect(data["id"]).to eq user.id
       end
 
-      it "returns a HTTP status of ok" do
+      it "returns a ok HTTP status" do
         expect(response).to have_http_status :ok
       end
     end
 
-    context "without a valid JSON Web Token" do
-      it "returns a HTTP status of ok" do
+    context "when a User is not authenticated" do
+      it "returns a unauthorized HTTP status" do
         get "/current_user"
         expect(response).to have_http_status :unauthorized
       end
