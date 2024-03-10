@@ -160,7 +160,7 @@ RSpec.describe TasksController, type: :request do
 
     context "when a User is not authenticated" do
       it "returns a unauthorized HTTP status" do
-        get "/tasks"
+        patch "/tasks/#{task.id}/complete"
 
         expect(response).to have_http_status :unauthorized
       end
