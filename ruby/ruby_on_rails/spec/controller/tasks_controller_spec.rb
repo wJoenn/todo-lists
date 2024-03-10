@@ -47,7 +47,7 @@ RSpec.describe TasksController, type: :request do
 
       context "with proper params" do
         before do
-          post "/tasks", params: { task: { title: title } }
+          post "/tasks", params: { task: { title: } }
         end
 
         it "returns a JSON object" do
@@ -96,7 +96,7 @@ RSpec.describe TasksController, type: :request do
 
     context "when a User is not authenticated" do
       it "returns a unauthorized HTTP status" do
-        post "/tasks", params: { task: { title: title } }
+        post "/tasks", params: { task: { title: } }
 
         expect(response).to have_http_status :unauthorized
       end
