@@ -16,7 +16,6 @@ describe User do
   describe "validations" do
     it "creates a new User with proper params" do
       user = create_user(email, password)
-
       user.valid?.should be_true
     end
 
