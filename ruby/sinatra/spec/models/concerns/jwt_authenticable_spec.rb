@@ -1,55 +1,14 @@
 RSpec.describe JwtAuthenticable do
-  let(:email) { "user@example.com" }
-  let(:password) { "password" }
-  let(:user) { create(:user, password:) }
-
-  describe "validations" do
-    it "validates the presence of the password" do
-      user = User.create(email:)
-
-      expect(user).not_to be_persisted
-      expect(user.errors.full_messages).to contain_exactly "Password can't be blank"
-    end
-
-    it "validates that the password_confirmation is similar to the password" do
-      user = User.create(email:, password:, password_confirmation: "wrong")
-
-      expect(user).not_to be_persisted
-      expect(user.errors.full_messages).to contain_exactly "Password confirmation doesn't match Password"
-    end
-  end
+  let(:user) { create(:user) }
 
   describe "::by_jwt" do
     it "returns the User when called with the User jti" do
       found_user = User.by_jwt(user.jwt)
-
       expect(found_user.id).to be user.id
     end
 
     it "returns nil when called with an incorrect jti" do
       expect(User.by_jwt("")).to be_nil
-    end
-  end
-
-  describe "#jwt" do
-    it "returns a Bearer User token" do
-      expect(user.jwt).to match(/^Bearer .+/)
-    end
-  end
-
-  describe "#password" do
-    it "returns the User password as a hash string" do
-      expect(user.password).to eq password
-      expect(password).not_to eq user.password
-    end
-  end
-
-  describe "#password=" do
-    it "updates the User encrypted_password" do
-      user.password = "new password"
-      user.save
-
-      expect(user.password).to eq "new password"
     end
   end
 
@@ -59,6 +18,18 @@ RSpec.describe JwtAuthenticable do
       user.edit_jti
 
       expect(old_jti).not_to eq user.jti
+    end
+  end
+
+  describe "#jwt" do
+    it "returns a Bearer User token" do
+      expect(user.jwt).to match(/^Bearer .+/)
+    end
+  end
+
+  describe "#to_json" do
+    it "does not render the User's jti" do
+      expect(JSON.parse(user.to_json)).not_to have_key "jti"
     end
   end
 end

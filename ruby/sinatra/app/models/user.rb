@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  include DatabaseAuthenticable
   include JwtAuthenticable
 
   has_many :tasks

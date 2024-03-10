@@ -15,17 +15,18 @@ RSpec.describe User do
     it "creates a new User with proper params" do
       user = described_class.create(email:, password:)
       expect(user).to be_persisted
-      expect(user.errors.full_messages).to be_empty
     end
 
     it "validates the presence of the email" do
       user = described_class.create(password:)
+
       expect(user).not_to be_persisted
       expect(user.errors.full_messages).to contain_exactly "Email can't be blank"
     end
 
     it "validates the format of the email" do
-      user = described_class.create(email: "wrong@email", password:)
+      user = described_class.create(email: "wrong@example", password:)
+
       expect(user).not_to be_persisted
       expect(user.errors.full_messages).to contain_exactly "Email is invalid"
     end
