@@ -106,3 +106,5 @@ end
 options "*" do
   200
 end
+
+set :port, 3000
