@@ -11,9 +11,7 @@ class ApplicationController
   def initialize(@env : HTTP::Server::Context, @current_user = User.new)
   end
 
-  private def current_user
-    @current_user
-  end
+  private getter current_user : User
 
   private def params
     @params ||= @env.params.as Kemal::ParamParser
