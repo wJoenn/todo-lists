@@ -4,8 +4,8 @@ class CorsHandler < Kemal::Handler
     env.response.headers["Access-Control-Expose-Headers"] = "Authorization"
 
     if cors?(env.request)
-      env.response.headers["Access-Control-Allow-Methods"] = "GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS"
       env.response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+      env.response.headers["Access-Control-Allow-Methods"] = "GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS"
       return
     end
 
