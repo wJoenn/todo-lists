@@ -1,4 +1,4 @@
-# Todo list example
+# Todo MVCs example
 
 I like to dab into a lot of different languages and frameworks to see how the grass is on the other side and when trying out a new framework for the first time I usually make a simple CRUD app with authentication like a todo MVC or a live chat.
 I figured it'd help me keep things organized if I stocked all of those examples within a single repository so here it is.
