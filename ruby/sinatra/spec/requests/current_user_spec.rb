@@ -1,6 +1,6 @@
 RSpec.describe "/current_user" do
   describe "GET /current_user" do
-    context "with a valid JSON Web Token" do
+    context "when a User is authenticated" do
       let(:user) { create(:user) }
 
       before do
@@ -14,16 +14,16 @@ RSpec.describe "/current_user" do
 
       it "returns the instance of User" do
         data = JSON.parse(last_response.body)
-        expect(data["email"]).to eq user.email
+        expect(data["id"]).to eq user.id
       end
 
-      it "returns a HTTP status of ok" do
+      it "returns a ok HTTP status" do
         expect(last_response.status).to be 200
       end
     end
 
-    context "without a valid JSON Web Token" do
-      it "returns a HTTP status of ok" do
+    context "when a User is not authenticated" do
+      it "returns a unauthorized HTTP status" do
         get "/current_user"
         expect(last_response.status).to be 401
       end

@@ -15,7 +15,7 @@ module DatabaseAuthenticable
   end
 
   def password=(new_password)
-    self.encrypted_password = BCrypt::Password.create(new_password)
+    self.encrypted_password = BCrypt::Password.create(new_password) unless new_password.nil?
   end
 
   def to_json

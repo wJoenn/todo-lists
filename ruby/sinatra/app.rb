@@ -39,7 +39,7 @@ post "/tasks" do
   task = @current_user.tasks.new(task_params)
 
   if task.save
-    status 202
+    status 201
     task.to_json
   else
     status 422
@@ -71,7 +71,7 @@ post "/users" do
   user = User.new(user_params)
 
   if user.save
-    status 202
+    status 201
     response.headers["Authorization"] = user.jwt
     user.to_json
   else

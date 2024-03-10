@@ -5,13 +5,7 @@ RSpec.describe "/users" do
   describe "POST /users" do
     context "with proper params" do
       before do
-        post "/users", params: {
-          user: {
-            email:,
-            password:,
-            password_confirmation: password
-          }
-        }
+        post "/users", params: { user: { email:, password:, password_confirmation: password } }
       end
 
       it "returns a JSON object" do
@@ -28,18 +22,18 @@ RSpec.describe "/users" do
         expect(data["email"]).to eq email
       end
 
-      it "returns a HTTP status of created" do
-        expect(last_response.status).to be 202
+      it "returns a created HTTP status" do
+        expect(last_response.status).to be 201
       end
 
       it "returns a Authorization header" do
-        expect(last_response["Authorization"]).to be_present
+        expect(last_response["Authorization"]).to eq User.first.jwt
       end
     end
 
     context "without proper params" do
       before do
-        post "/users"
+        post "/users", params: { user: { email: nil, password: nil } }
       end
 
       it "returns a JSON object" do
@@ -77,21 +71,21 @@ RSpec.describe "/users" do
 
       it "returns the instance of User" do
         data = JSON.parse(last_response.body)
-        expect(data["email"]).to eq user.email
+        expect(data["id"]).to be user.id
       end
 
-      it "returns a HTTP status of ok" do
+      it "returns a ok HTTP status" do
         expect(last_response.status).to be 200
       end
 
       it "returns a Authorization header" do
-        expect(last_response["Authorization"]).to be_present
+        expect(last_response["Authorization"]).to eq user.jwt
       end
     end
 
     context "without proper params" do
       before do
-        post "/users/sign_in"
+        post "/users/sign_in", params: { user: { email: nil, password: nil } }
       end
 
       it "returns a JSON object" do
@@ -104,26 +98,36 @@ RSpec.describe "/users" do
         expect(data["errors"]).to contain_exactly "Invalid Email or Password"
       end
 
-      it "returns a HTTP status of unauthorized" do
+      it "returns a unauthorized HTTP status" do
         expect(last_response.status).to be 401
       end
     end
   end
 
   describe "DELETE /users/sign_out" do
-    let(:user) { create(:user) }
+    context "when a User is authenticated" do
+      let(:user) { create(:user) }
 
-    before do
-      delete "/users/sign_out", nil, { "HTTP_AUTHORIZATION" => user.jwt }
+      before do
+        delete "/users/sign_out", nil, { "HTTP_AUTHORIZATION" => user.jwt }
+      end
+
+      it "signs the User out" do
+        get "/current_user", nil, { "HTTP_AUTHORIZATION" => user.jwt }
+        expect(last_response.status).to be 401
+      end
+
+      it "returns a ok HTTP status" do
+        expect(last_response.status).to be 200
+      end
     end
 
-    it "signs the User out" do
-      get "/current_user", nil, { "HTTP_AUTHORIZATION" => user.jwt }
-      expect(last_response.status).to be 401
-    end
+    context "when a User is not authenticated" do
+      it "returns a unauthorized HTTP status" do
+        delete "/users/sign_out"
 
-    it "returns a HTTP status of ok" do
-      expect(last_response.status).to be 200
+        expect(last_response.status).to be 401
+      end
     end
   end
 end
