@@ -22,6 +22,13 @@ describe Bearer do
     it "encodes a jti into a Json Web Token" do
       bearer.should match /^Bearer \w+/
     end
+
+    it "adds an expiration date of 30 days" do
+      jwt = bearer.gsub(/^Bearer /, "")
+      payload, _ = JWT.decode jwt, ENV["JWT_SECRET_KEY"], JWT::Algorithm::HS256
+
+      Time.unix(payload["exp"].as_i64).date.should eq 30.days.from_now.date
+    end
   end
 
   describe ".jti" do
