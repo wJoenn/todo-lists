@@ -11,7 +11,7 @@ class Bearer
   end
 
   def self.encode(jti : String) : String
-    payload = {"jti" => jti, "exp" => 30.days.from_now.to_unix }
+    payload = {"jti" => jti, "exp" => 30.days.from_now.to_unix}
     jwt = JWT.encode payload, ENV["JWT_SECRET_KEY"], JWT::Algorithm::HS256
 
     "Bearer #{jwt}"
