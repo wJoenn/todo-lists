@@ -7,10 +7,12 @@
     "dev": "bun --watch src/app.ts",
     "db:create": "createdb ${PWD##*/}_development; createdb ${PWD##*/}_test",
     "db:drop": "dropdb ${PWD##*/}_development; dropdb ${PWD##*/}_test",
+    "db:seed": "prisma db seed",
     "lint": "eslint . --ext .js,.ts,.d.ts --max-warnings=0",
     "tsc": "tsc"
   },
   "dependencies": {
+    "@prisma/client": "5.10.2",
     "express": "^4.18.3"
   },
   "devDependencies": {
@@ -23,5 +25,9 @@
     "eslint-config-standard": "^17.1.0",
     "prisma": "^5.10.2",
     "typescript": "<5.4.0"
+  },
+
+  "prisma": {
+    "seed": "bun prisma/seed.ts"
   }
 }

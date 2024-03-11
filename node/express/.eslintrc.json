@@ -45,6 +45,9 @@
         "requireLast": false
       }
     }],
+    "@typescript-eslint/no-misused-promises": ["error", {
+      "checksVoidReturn": false
+    }],
     "@typescript-eslint/no-useless-constructor": "error",
     "@typescript-eslint/space-infix-ops": "error"
   },
