@@ -1,8 +1,7 @@
 import express from "express"
-import { PrismaClient } from "@prisma/client"
+import prisma from "~/libs/prisma"
 
 const app = express()
-const prisma = new PrismaClient()
 
 app.get("/", (_, res) => { res.status(200).json("Hello world") })
 

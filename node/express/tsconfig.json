@@ -13,13 +13,11 @@
     "allowImportingTsExtensions": true,
     "types": ["vitest/globals"],
     "paths": {
-      "~": [
-        "./src"
-      ],
-      "~/*": [
-        "./src/*"
-      ]
-    }
+      "~": ["."],
+      "~/*": ["./*"],
+      "src": ["./src"],
+      "src/*": ["./src/*"]
+    },
   },
   "include": [
     "./**/*",
