@@ -3,8 +3,8 @@
 
 ## Features
 - [x] Connection to a PostgreSQL database
-- [ ] Task Model
-- [ ] /tasks routes
+- [x] Task Model
+- [x] /tasks routes
 - [ ] User Model
 - [ ] JWT authentication
 - [ ] /users routes
