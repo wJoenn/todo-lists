@@ -17,7 +17,7 @@ describe("Task", () => {
       } catch (err) {
         const issues = (err as ZodError).issues
         expect(issues).toHaveLength(1)
-        expect(issues[0]).toMatchObject({ code: "too_small", path: ["title"] })
+        expect(issues.map(issue => issue.message)).toStrictEqual(["Title can't be blank"])
       }
     })
   })
