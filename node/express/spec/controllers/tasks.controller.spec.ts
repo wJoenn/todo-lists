@@ -68,7 +68,7 @@ describe("TasksController", () => {
 
       it("returns a list error messages", () => {
         console.log(response.body)
-        expect(response.body).toStrictEqual(["Title can't be blank"])
+        expect(response.body).toStrictEqual({ errors: ["Title can't be blank"] })
       })
 
       it("returns a created HTTP status", () => {

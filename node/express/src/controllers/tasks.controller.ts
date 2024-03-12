@@ -1,5 +1,5 @@
 import type { Request, Response } from "express"
-import type { ZodError } from "zod"
+import { z as zod } from "zod"
 import { Prisma } from "@prisma/client"
 import prisma from "src/models/task.model"
 
@@ -15,7 +15,11 @@ export const create = async (req: Request, res: Response) => {
     const task = await prisma.task.create({ data })
     return res.status(201).json(task)
   } catch (error) {
-    return res.status(422).json((error as ZodError).issues.map(issue => issue.message))
+    if (error instanceof zod.ZodError) {
+      return res.status(422).json({ errors: error.issues.map(issue => issue.message) })
+    }
+
+    throw error
   }
 }
 
@@ -33,6 +37,10 @@ export const complete = async (req: Request, res: Response) => {
     const task = await prisma.task.update({ data: { completed: true }, where: { id: +req.params.id } })
     return res.status(200).json(task)
   } catch (error) {
-    return res.status(422).json((error as ZodError).issues)
+    if (error instanceof zod.ZodError) {
+      return res.status(422).json({ errors: error.issues.map(issue => issue.message) })
+    }
+
+    throw error
   }
 }
