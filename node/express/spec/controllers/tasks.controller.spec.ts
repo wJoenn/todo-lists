@@ -68,7 +68,7 @@ describe("TasksController", () => {
 
       it("returns a list error messages", () => {
         console.log(response.body)
-        expect(response.body).toStrictEqual({ errors: ["Title can't be blank"] })
+        expect(response.body).toStrictEqual({ errors: { title: "Title can't be blank" } })
       })
 
       it("returns a created HTTP status", () => {
@@ -78,17 +78,43 @@ describe("TasksController", () => {
   })
 
   describe("DELETE /tasks/:id", () => {
+    let task: Prisma.TaskGetPayload<true>
+
     beforeEach(async () => {
-      const task = await createTask()
-      response = await request.delete(`/tasks/${task.id}`)
+      task = await createTask()
     })
 
-    it("destroys the instance of Task", async () => {
-      await expect(prisma.task.count()).resolves.toBe(0)
+    describe("when the Task is found", () => {
+      beforeEach(async () => {
+        response = await request.delete(`/tasks/${task.id}`)
+      })
+
+      it("destroys the instance of Task", async () => {
+        await expect(prisma.task.count()).resolves.toBe(0)
+      })
+
+      it("returns a ok http status", () => {
+        expect(response.status).toBe(200)
+      })
     })
 
-    it("returns a ok http status", () => {
-      expect(response.status).toBe(200)
+    describe("when the Task is not found", () => {
+      beforeEach(async () => {
+        response = await request.delete(`/tasks/${task.id + 1}`)
+      })
+
+      it("return a JSON type response", () => {
+        expect(response.type).toBe("application/json")
+      })
+
+      it("returns a list error messages", () => {
+        console.log(response.body)
+        expect(response.body).toStrictEqual({ errors: { task: "Task must exist" } })
+      })
+
+      it("returns a created HTTP status", () => {
+        expect(response.status).toBe(404)
+      })
     })
   })
 
@@ -97,23 +123,47 @@ describe("TasksController", () => {
 
     beforeEach(async () => {
       task = await createTask()
-      response = await request.patch(`/tasks/${task.id}/complete`)
     })
 
-    it("returns a JSON type response", () => {
-      expect(response.type).toBe("application/json")
+    describe("when the Task is found", () => {
+      beforeEach(async () => {
+        response = await request.patch(`/tasks/${task.id}/complete`)
+      })
+
+      it("returns a JSON type response", () => {
+        expect(response.type).toBe("application/json")
+      })
+
+      it("returns the instance of Task", () => {
+        expect(response.body).toMatchObject({ id: task.id })
+      })
+
+      it("marks the Task as completed", async () => {
+        await expect(prisma.task.findUnique({ where: { id: task.id } })).resolves.toMatchObject({ completed: true })
+      })
+
+      it("returns a ok http status", () => {
+        expect(response.status).toBe(200)
+      })
     })
 
-    it("returns the instance of Task", () => {
-      expect(response.body).toMatchObject({ id: task.id })
-    })
+    describe("when the Task is not found", () => {
+      beforeEach(async () => {
+        response = await request.delete(`/tasks/${task.id + 1}`)
+      })
 
-    it("marks the Task as completed", async () => {
-      await expect(prisma.task.findUnique({ where: { id: task.id } })).resolves.toMatchObject({ completed: true })
-    })
+      it("return a JSON type response", () => {
+        expect(response.type).toBe("application/json")
+      })
 
-    it("returns a ok http status", () => {
-      expect(response.status).toBe(200)
+      it("returns a list error messages", () => {
+        console.log(response.body)
+        expect(response.body).toStrictEqual({ errors: { task: "Task must exist" } })
+      })
+
+      it("returns a created HTTP status", () => {
+        expect(response.status).toBe(404)
+      })
     })
   })
 })
