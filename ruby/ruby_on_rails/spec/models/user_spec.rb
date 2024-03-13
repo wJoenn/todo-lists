@@ -31,6 +31,14 @@ RSpec.describe User do
       expect(user.errors.full_messages).to contain_exactly "Email is invalid"
     end
 
+    it "validates the uniqueness of the email" do
+      described_class.create(email:, password:)
+      user = described_class.create(email:, password:)
+
+      expect(user).not_to be_persisted
+      expect(user.errors.full_messages).to contain_exactly "Email has already been taken"
+    end
+
     it "validates the presence of the password" do
       user = described_class.create(email:)
 
