@@ -111,7 +111,7 @@ RSpec.describe TasksController, type: :request do
         sign_in user
       end
 
-      context "when the Task exists" do
+      context "when the Task is found" do
         before do
           delete "/tasks/#{task.id}"
         end
@@ -128,6 +128,11 @@ RSpec.describe TasksController, type: :request do
       context "when the Task is not found" do
         before do
           delete "/tasks/#{task.id + 1}"
+        end
+
+        it "returns a JSON object" do
+          expect(response.body).to be_a String
+          expect(response.parsed_body).to have_key "errors"
         end
 
         it "returns a list of error messages" do
@@ -158,7 +163,7 @@ RSpec.describe TasksController, type: :request do
         sign_in user
       end
 
-      context "when the Task exists" do
+      context "when the Task is found" do
         before do
           patch "/tasks/#{task.id}/complete"
         end
@@ -185,6 +190,11 @@ RSpec.describe TasksController, type: :request do
       context "when the Task is not found" do
         before do
           patch "/tasks/#{task.id + 1}/complete"
+        end
+
+        it "returns a JSON object" do
+          expect(response.body).to be_a String
+          expect(response.parsed_body).to have_key "errors"
         end
 
         it "returns a list of error messages" do

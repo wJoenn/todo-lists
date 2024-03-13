@@ -6,14 +6,12 @@ class TasksController < ApplicationController
   end
 
   def create
-    task = current_user.tasks.new(task_params)
+    @task = current_user.tasks.new(task_params)
 
-    if task.save
-      render json: task, status: :created
+    if @task.save
+      render json: @task, status: :created
     else
-      render json: {
-        errors: task.errors.map { |error| [error.attribute, error.full_message] }.to_h
-      }, status: :unprocessable_entity
+      render json: { errors: task_errors }, status: :unprocessable_entity
     end
   end
 
@@ -39,6 +37,10 @@ class TasksController < ApplicationController
 
   def set_task
     @task = current_user.tasks.find_by(id: params[:id])
+  end
+
+  def task_errors
+    @task.errors.map { |error| [error.attribute, error.full_message] }.to_h
   end
 
   def task_params
