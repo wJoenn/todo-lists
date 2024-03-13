@@ -1,7 +1,4 @@
-type User = {
-  id: number
-  email: string
-}
+import type { User } from "~/types"
 
 export const useSessionStore = defineStore("SessionStore", () => {
   const user = ref<User>()
