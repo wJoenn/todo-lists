@@ -22,6 +22,7 @@ class User < Jennifer::Model::Base
   has_many :tasks, Task, dependent: :destroy
 
   validates_presence :email
+  validates_uniqueness :email, if: email
   validates_format :email, /\A[^@\s]+@[^@\s]+\.[a-z]{2,}\z/, allow_blank: true
 
   def self.by_jwt(jwt : String) : User?

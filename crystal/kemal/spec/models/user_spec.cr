@@ -39,6 +39,17 @@ describe User do
       messages.should contain "Email is invalid"
     end
 
+    it "validates the uniqueness of the email" do
+      create_user(email, password)
+      user = create_user(email, password)
+
+      user.valid?.should be_false
+
+      messages = user.errors.full_messages
+      messages.size.should eq 1
+      messages.should contain "Email has already been taken"
+    end
+
     it "validates the presence of the password" do
       user = create_user(email, nil)
 
