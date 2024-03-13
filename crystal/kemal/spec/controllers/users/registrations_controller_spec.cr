@@ -85,7 +85,7 @@ describe Users::RegistrationsController do
       end
 
       it "returns a JSON object" do
-        NamedTuple(errors: Array(String)).from_json(response.body)
+        NamedTuple(errors: Hash(String, String)).from_json(response.body)
         response.body?.should be_a String
       end
 
@@ -95,10 +95,7 @@ describe Users::RegistrationsController do
 
       it "returns a list of error messages" do
         data = JSON.parse(response.body)
-        errors = data["errors"].as_a
-
-        errors.should contain "Email can't be blank"
-        errors.should contain "Password can't be blank"
+        data["errors"].as_h.should eq({"email" => "Email can't be blank", "password" => "Password can't be blank"})
       end
 
       it "returns a unprocessable_entity HTTP status" do

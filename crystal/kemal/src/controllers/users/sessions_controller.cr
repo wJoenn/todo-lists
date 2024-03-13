@@ -9,7 +9,7 @@ class Users::SessionsController < ApplicationController
     end
 
     response.status_code = 401
-    {errors: ["Invalid Email or Password"]}.to_json
+    {errors: {user: "Invalid Email or Password"}}.to_json
   end
 
   def destroy

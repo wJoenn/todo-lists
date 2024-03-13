@@ -81,7 +81,7 @@ describe TasksController do
         end
 
         it "returns a JSON object" do
-          NamedTuple(errors: Array(String)).from_json(response.body)
+          NamedTuple(errors: Hash(String, String)).from_json(response.body)
           response.body?.should be_a String
         end
 
@@ -91,7 +91,7 @@ describe TasksController do
 
         it "returns a list of error messages" do
           data = JSON.parse(response.body)
-          data["errors"].as_a.should contain "Title can't be blank"
+          data["errors"].as_h.should eq({"title" => "Title can't be blank"})
         end
 
         it "returns a unprocessable_entity HTTP status" do
@@ -119,16 +119,38 @@ describe TasksController do
     end
 
     context "when a User is authenticated" do
-      before_each do
-        delete "/tasks/#{task.id}", headers: HTTP::Headers{"Authorization" => user.jwt}
+      context "when the Task is found" do
+        before_each do
+          delete "/tasks/#{task.id}", headers: HTTP::Headers{"Authorization" => user.jwt}
+        end
+
+        it "destroys the instance of Task" do
+          Task.all.count.should eq 0
+        end
+
+        it "returns a ok HTTP status" do
+          response.status.should eq HTTP::Status::OK
+        end
       end
 
-      it "destroys the instance of Task" do
-        Task.all.count.should eq 0
-      end
+      context "when the Task is not found" do
+        before_each do
+          delete "/tasks/#{task.id.try &.+(1)}", headers: HTTP::Headers{"Authorization" => user.jwt}
+        end
 
-      it "returns a ok HTTP status" do
-        response.status.should eq HTTP::Status::OK
+        it "returns a JSON object" do
+          NamedTuple(errors: Hash(String, String)).from_json(response.body)
+          response.body?.should be_a String
+        end
+
+        it "returns a list of error messages" do
+          data = JSON.parse(response.body)
+          data["errors"].as_h.should eq({"task" => "Task must exist"})
+        end
+
+        it "returns a not_found HTTP status" do
+          response.status.should eq HTTP::Status::NOT_FOUND
+        end
       end
     end
 
@@ -149,26 +171,48 @@ describe TasksController do
     end
 
     context "when a User is authenticated" do
-      before_each do
-        patch "/tasks/#{task.id}/complete", headers: HTTP::Headers{"Authorization" => user.jwt}
+      context "when the Task is found" do
+        before_each do
+          patch "/tasks/#{task.id}/complete", headers: HTTP::Headers{"Authorization" => user.jwt}
+        end
+
+        it "returns a JSON object" do
+          NamedTuple(id: Int32).from_json(response.body)
+          response.body?.should be_a String
+        end
+
+        it "returns the instance of Task" do
+          data = JSON.parse(response.body)
+          data["id"].should eq task.id
+        end
+
+        it "marks the Task as completed" do
+          Task.find(task.id).try &.completed.should be_true
+        end
+
+        it "returns a ok HTTP status" do
+          response.status.should eq HTTP::Status::OK
+        end
       end
 
-      it "returns a JSON object" do
-        NamedTuple(id: Int32).from_json(response.body)
-        response.body?.should be_a String
-      end
+      context "when the Task is not found" do
+        before_each do
+          delete "/tasks/#{task.id.try &.+(1)}", headers: HTTP::Headers{"Authorization" => user.jwt}
+        end
 
-      it "returns the instance of Task" do
-        data = JSON.parse(response.body)
-        data["id"].should eq task.id
-      end
+        it "returns a JSON object" do
+          NamedTuple(errors: Hash(String, String)).from_json(response.body)
+          response.body?.should be_a String
+        end
 
-      it "marks the Task as completed" do
-        Task.find(task.id).try &.completed.should be_true
-      end
+        it "returns a list of error messages" do
+          data = JSON.parse(response.body)
+          data["errors"].as_h.should eq({"task" => "Task must exist"})
+        end
 
-      it "returns a ok HTTP status" do
-        response.status.should eq HTTP::Status::OK
+        it "returns a not_found HTTP status" do
+          response.status.should eq HTTP::Status::NOT_FOUND
+        end
       end
     end
 

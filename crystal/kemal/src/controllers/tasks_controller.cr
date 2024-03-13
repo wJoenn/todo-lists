@@ -14,7 +14,7 @@ class TasksController < ApplicationController
     end
 
     response.status_code = 422
-    {errors: task.errors.full_messages}.to_json
+    {errors: task_errors(task)}.to_json
   end
 
   def destroy
@@ -25,8 +25,8 @@ class TasksController < ApplicationController
       return response.status_code = 200
     end
 
-    response.status_code = 422
-    {errors: ["Task must exist"]}.to_json
+    response.status_code = 404
+    {errors: {task: "Task must exist"}}.to_json
   end
 
   def complete
@@ -38,13 +38,18 @@ class TasksController < ApplicationController
       return task.to_json
     end
 
-    response.status_code = 422
-    {errors: ["Task must exist"]}.to_json
+    response.status_code = 404
+    {errors: {task: "Task must exist"}}.to_json
   end
 
   private def set_task : Task?
     id = params.url["id"]
     current_user.tasks.find { |user_task| user_task.id == id.to_i }
+  end
+
+  private def task_errors(task) : Hash
+    errors = task.errors
+    errors.messages.map { |attribute, message| [attribute, errors.full_message(attribute, message.first)] }.to_h
   end
 
   private def task_params : NamedTuple

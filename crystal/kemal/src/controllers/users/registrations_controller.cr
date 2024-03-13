@@ -16,7 +16,12 @@ class Users::RegistrationsController < ApplicationController
     end
 
     response.status_code = 422
-    {errors: user.errors.full_messages}.to_json
+    {errors: user_errors(user)}.to_json
+  end
+
+  private def user_errors(user) : Hash
+    errors = user.errors
+    errors.messages.map { |attribute, message| [attribute, errors.full_message(attribute, message.first)] }.to_h
   end
 
   private def user_params : NamedTuple

@@ -46,13 +46,13 @@ describe Users::SessionsController do
       end
 
       it "returns a JSON object" do
-        NamedTuple(errors: Array(String)).from_json(response.body)
+        NamedTuple(errors: Hash(String, String)).from_json(response.body)
         response.body?.should be_a String
       end
 
       it "returns a list of error messages" do
         data = JSON.parse(response.body)
-        data["errors"].as_a.should contain "Invalid Email or Password"
+        data["errors"].as_h.should eq({"user" => "Invalid Email or Password"})
       end
 
       it "returns a unauthorized HTTP status" do
