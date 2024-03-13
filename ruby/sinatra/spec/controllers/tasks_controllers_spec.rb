@@ -80,7 +80,7 @@ RSpec.describe TasksController, type: :request do
 
         it "returns a list of error messages" do
           data = JSON.parse(last_response.body)
-          expect(data["errors"]).to contain_exactly "Title can't be blank"
+          expect(data["errors"]).to match({ "title" => "Title can't be blank" })
         end
 
         it "returns a HTTP status of unprocessable_entity" do
@@ -102,16 +102,38 @@ RSpec.describe TasksController, type: :request do
     let(:task) { create(:task, user:) }
 
     context "when a User is authenticated" do
-      before do
-        delete "/tasks/#{task.id}", nil, { "HTTP_AUTHORIZATION" => user.jwt }
+      context "when the Task is found" do
+        before do
+          delete "/tasks/#{task.id}", nil, { "HTTP_AUTHORIZATION" => user.jwt }
+        end
+
+        it "destroys the instance of Task" do
+          expect(Task.count).to be 0
+        end
+
+        it "returns a ok HTTP status" do
+          expect(last_response.status).to be 200
+        end
       end
 
-      it "destroys the instance of Task" do
-        expect(Task.count).to be 0
-      end
+      context "when the Task is not found" do
+        before do
+          delete "/tasks/#{task.id + 1}", nil, { "HTTP_AUTHORIZATION" => user.jwt }
+        end
 
-      it "returns a ok HTTP status" do
-        expect(last_response.status).to be 200
+        it "returns a JSON object" do
+          expect(last_response.body).to be_a String
+          expect(JSON.parse(last_response.body)).to have_key "errors"
+        end
+
+        it "returns a list of error messages" do
+          data = JSON.parse(last_response.body)
+          expect(data["errors"]).to match({ "task" => "Task must exist" })
+        end
+
+        it "returns a not_found HTTP status" do
+          expect(last_response.status).to be 404
+        end
       end
     end
 
@@ -128,26 +150,48 @@ RSpec.describe TasksController, type: :request do
     let!(:task) { create(:task, user:) }
 
     context "when a User is authenticated" do
-      before do
-        patch "/tasks/#{task.id}/complete", nil, { "HTTP_AUTHORIZATION" => user.jwt }
+      context "when the Task is found" do
+        before do
+          patch "/tasks/#{task.id}/complete", nil, { "HTTP_AUTHORIZATION" => user.jwt }
+        end
+
+        it "returns a JSON object" do
+          expect(last_response.body).to be_a String
+          expect(JSON.parse(last_response.body)).to have_key "id"
+        end
+
+        it "returns the instance of Task" do
+          data = JSON.parse(last_response.body)
+          expect(data["id"]).to be task.id
+        end
+
+        it "marks the Task as completed" do
+          expect(Task.find(task.id)).to be_completed
+        end
+
+        it "returns a ok HTTP status" do
+          expect(last_response.status).to be 200
+        end
       end
 
-      it "returns a JSON object" do
-        expect(last_response.body).to be_a String
-        expect(JSON.parse(last_response.body)).to have_key "id"
-      end
+      context "when the Task is not found" do
+        before do
+          patch "/tasks/#{task.id + 1}/complete", nil, { "HTTP_AUTHORIZATION" => user.jwt }
+        end
 
-      it "returns the instance of Task" do
-        data = JSON.parse(last_response.body)
-        expect(data["id"]).to be task.id
-      end
+        it "returns a JSON object" do
+          expect(last_response.body).to be_a String
+          expect(JSON.parse(last_response.body)).to have_key "errors"
+        end
 
-      it "marks the Task as completed" do
-        expect(Task.find(task.id)).to be_completed
-      end
+        it "returns a list of error messages" do
+          data = JSON.parse(last_response.body)
+          expect(data["errors"]).to match({ "task" => "Task must exist" })
+        end
 
-      it "returns a ok HTTP status" do
-        expect(last_response.status).to be 200
+        it "returns a not_found HTTP status" do
+          expect(last_response.status).to be 404
+        end
       end
     end
 

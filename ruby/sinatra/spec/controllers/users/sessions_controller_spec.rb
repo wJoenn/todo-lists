@@ -41,7 +41,7 @@ RSpec.describe Users::SessionsController do
 
       it "returns a list of error messages" do
         data = JSON.parse(last_response.body)
-        expect(data["errors"]).to contain_exactly "Invalid Email or Password"
+        expect(data["errors"]).to match({ "user" => "Invalid Email or Password" })
       end
 
       it "returns a unauthorized HTTP status" do
