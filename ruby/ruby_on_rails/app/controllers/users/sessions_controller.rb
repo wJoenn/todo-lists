@@ -8,7 +8,7 @@ class Users::SessionsController < Devise::SessionsController
       sign_in(resource_name, resource)
       render json: resource, status: :ok
     else
-      render json: { errors: ["Invalid Email or Password"] }, status: :unauthorized
+      render json: { errors: { user: "Invalid Email or Password" } }, status: :unauthorized
     end
   end
 

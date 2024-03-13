@@ -85,7 +85,7 @@ RSpec.describe TasksController, type: :request do
 
         it "returns a list of error messages" do
           data = response.parsed_body
-          expect(data["errors"]).to contain_exactly "Title can't be blank"
+          expect(data["errors"]).to match({ title: "Title can't be blank" })
         end
 
         it "returns a unprocessable_entity HTTP status" do
@@ -109,15 +109,35 @@ RSpec.describe TasksController, type: :request do
     context "when a User is authenticated" do
       before do
         sign_in user
-        delete "/tasks/#{task.id}"
       end
 
-      it "destroys the instance of Task" do
-        expect(Task.count).to be 0
+      context "when the Task exists" do
+        before do
+          delete "/tasks/#{task.id}"
+        end
+
+        it "destroys the instance of Task" do
+          expect(Task.count).to be 0
+        end
+
+        it "returns a ok HTTP status" do
+          expect(response).to have_http_status :ok
+        end
       end
 
-      it "returns a ok HTTP status" do
-        expect(response).to have_http_status :ok
+      context "when the Task is not found" do
+        before do
+          delete "/tasks/#{task.id + 1}"
+        end
+
+        it "returns a list of error messages" do
+          data = response.parsed_body
+          expect(data["errors"]).to match({ task: "Task must exist" })
+        end
+
+        it "returns a not_found HTTP status" do
+          expect(response).to have_http_status :not_found
+        end
       end
     end
 
@@ -136,25 +156,45 @@ RSpec.describe TasksController, type: :request do
     context "when a User is authenticated" do
       before do
         sign_in user
-        patch "/tasks/#{task.id}/complete"
       end
 
-      it "returns a JSON object" do
-        expect(response.body).to be_a String
-        expect(response.parsed_body).to have_key "id"
+      context "when the Task exists" do
+        before do
+          patch "/tasks/#{task.id}/complete"
+        end
+
+        it "returns a JSON object" do
+          expect(response.body).to be_a String
+          expect(response.parsed_body).to have_key "id"
+        end
+
+        it "returns the instance of Task" do
+          data = response.parsed_body
+          expect(data["id"]).to be task.id
+        end
+
+        it "marks the Task as completed" do
+          expect(Task.find(task.id)).to be_completed
+        end
+
+        it "returns a ok HTTP status" do
+          expect(response).to have_http_status :ok
+        end
       end
 
-      it "returns the instance of Task" do
-        data = response.parsed_body
-        expect(data["id"]).to be task.id
-      end
+      context "when the Task is not found" do
+        before do
+          patch "/tasks/#{task.id + 1}/complete"
+        end
 
-      it "marks the Task as completed" do
-        expect(Task.find(task.id)).to be_completed
-      end
+        it "returns a list of error messages" do
+          data = response.parsed_body
+          expect(data["errors"]).to match({ task: "Task must exist" })
+        end
 
-      it "returns a ok HTTP status" do
-        expect(response).to have_http_status :ok
+        it "returns a not_found HTTP status" do
+          expect(response).to have_http_status :not_found
+        end
       end
     end
 

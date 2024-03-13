@@ -11,24 +11,34 @@ class TasksController < ApplicationController
     if task.save
       render json: task, status: :created
     else
-      render json: { errors: task.errors.full_messages }, status: :unprocessable_entity
+      render json: {
+        errors: task.errors.map { |error| [error.attribute, error.full_message] }.to_h
+      }, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @task.destroy
-    render status: :ok
+    if @task.present?
+      @task.destroy
+      render status: :ok
+    else
+      render json: { errors: { task: "Task must exist" } }, status: :not_found
+    end
   end
 
   def complete
-    @task.update(completed: true)
-    render json: @task, status: :ok
+    if @task.present?
+      @task.update(completed: true)
+      render json: @task, status: :ok
+    else
+      render json: { errors: { task: "Task must exist" } }, status: :not_found
+    end
   end
 
   private
 
   def set_task
-    @task = current_user.tasks.find(params[:id])
+    @task = current_user.tasks.find_by(id: params[:id])
   end
 
   def task_params

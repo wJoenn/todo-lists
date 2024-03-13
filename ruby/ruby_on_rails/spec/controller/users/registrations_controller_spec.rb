@@ -47,7 +47,7 @@ RSpec.describe Users::RegistrationsController, type: :request do
 
       it "returns a list of error messages" do
         data = response.parsed_body
-        expect(data["errors"]).to contain_exactly("Email can't be blank", "Password can't be blank")
+        expect(data["errors"]).to match({ email: "Email can't be blank", password: "Password can't be blank" })
       end
 
       it "returns a unprocessable_entity HTTP status" do

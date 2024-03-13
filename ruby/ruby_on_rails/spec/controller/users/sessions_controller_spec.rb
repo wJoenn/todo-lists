@@ -38,7 +38,7 @@ RSpec.describe Users::SessionsController, type: :request do
 
       it "returns a list of error messages" do
         data = response.parsed_body
-        expect(data["errors"]).to contain_exactly "Invalid Email or Password"
+        expect(data["errors"]).to match({ user: "Invalid Email or Password" })
       end
 
       it "returns a unauthorized HTTP status" do
