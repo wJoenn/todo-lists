@@ -32,7 +32,7 @@
   const errors = ref<TaskErrors>({})
   const tasks = ref<Task[]>([])
 
-  const sortedTasks = computed(() => tasks.value.sort((a, b) => b.id - a.id))
+  const sortedTasks = computed(() => [...tasks.value].sort((a, b) => b.id - a.id))
 
   const completeTask = async (id: number, index: number) => {
     await axios.patch(`${import.meta.env.VITE_API_URL}/tasks/${id}/complete`, null, {
