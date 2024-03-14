@@ -67,7 +67,6 @@ describe("TasksController", () => {
       })
 
       it("returns a list error messages", () => {
-        console.log(response.body)
         expect(response.body).toStrictEqual({ errors: { title: "Title can't be blank" } })
       })
 
@@ -108,7 +107,6 @@ describe("TasksController", () => {
       })
 
       it("returns a list error messages", () => {
-        console.log(response.body)
         expect(response.body).toStrictEqual({ errors: { task: "Task must exist" } })
       })
 
@@ -157,7 +155,6 @@ describe("TasksController", () => {
       })
 
       it("returns a list error messages", () => {
-        console.log(response.body)
         expect(response.body).toStrictEqual({ errors: { task: "Task must exist" } })
       })
 
