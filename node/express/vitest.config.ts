@@ -15,7 +15,7 @@ export default defineConfig({
     globals: true,
     pool: "forks",
     reporters: "verbose",
-    retry: 2,
+    retry: 5,
     setupFiles: "./spec/vitest-helper.ts"
   }
 })

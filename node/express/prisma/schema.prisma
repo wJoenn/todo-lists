@@ -20,3 +20,11 @@ model Task {
   title       String      @db.Text
   completed   Boolean?    @default(false)
 }
+
+model User {
+  id          Int         @id @default(autoincrement())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt @default(now())
+  email           String  @db.Text @unique
+  hashed_password String  @db.Text
+}
