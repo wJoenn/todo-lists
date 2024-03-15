@@ -1,17 +1,40 @@
 import bcrypt from "bcrypt"
 import { z as zod } from "zod"
 import { Prisma } from "@prisma/client"
-import { omit } from "src/utils"
+import { omit } from "../utils"
 import prisma from "~/libs/prisma.ts"
 
-type UserRawInput = Omit<Prisma.UserCreateInput, "hashed_password"> & {
-  password: string
-  password_confirmation?: string
+type UserCreateArgs = Omit<Prisma.UserCreateArgs, "data"> & {
+  data: Prisma.UserCreateInput & {
+    password_confirmation?: string
+  }
 }
 
-type UserCreateArgs = Omit<Prisma.UserCreateArgs, "data"> & {
-  data: UserRawInput
+const _hashed_args = async <A extends UserCreateArgs>(args: A) => {
+  const { select, data } = args
+
+  const salt = await bcrypt.genSalt()
+  data.password = await bcrypt.hash(data.password, salt)
+
+  return {
+    select: select as A["select"],
+    data
+  }
 }
+
+const _prismaError = (error: unknown) => {
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === "P2002") {
+      return Object.assign(new Error(), {
+        issues: [{ path: ["email"], message: "Email has already been taken" }]
+      })
+    }
+  }
+
+  return error
+}
+
+const _toJSON = (user: Prisma.UserUncheckedUpdateInput) => omit(user, "password")
 
 const UserSchema = zod
   .object({
@@ -30,7 +53,7 @@ const UserSchema = zod
   }, {
     message: "Password confirmation doesn't match Password",
     path: ["password_confirmation"]
-  }) satisfies zod.Schema<UserRawInput>
+  }) satisfies zod.Schema<UserCreateArgs["data"]>
 
 export default prisma.$extends({
   model: {
@@ -41,38 +64,16 @@ export default prisma.$extends({
 
         try {
           const user = await prisma.user.create(hashed_args) as Prisma.UserGetPayload<A>
-          return _model(user)
+          return { ...user, toJSON: _toJSON(user) }
         } catch (error) { throw _prismaError(error) }
+      }
+    }
+  },
+  result: {
+    user: {
+      toJSON: {
+        compute: _toJSON
       }
     }
   }
 })
-
-const _hashed_args = async <A extends UserCreateArgs>(args: A) => {
-  const { select, data } = args
-
-  const salt = await bcrypt.genSalt()
-  const hashed_password = await bcrypt.hash(data.password, salt)
-
-  return {
-    select: select as A["select"],
-    data: { ...omit(data, "password", "password_confirmation"), hashed_password }
-  }
-}
-
-const _model = <A extends UserCreateArgs>(user: Prisma.UserGetPayload<A>) => ({
-  ...omit(user, "hashed_password"),
-  password: user.hashed_password
-})
-
-const _prismaError = (error: unknown) => {
-  if (error instanceof Prisma.PrismaClientKnownRequestError) {
-    if (error.code === "P2002") {
-      return Object.assign(new Error(), {
-        issues: [{ path: ["email"], message: "Email has already been taken" }]
-      })
-    }
-  }
-
-  return error
-}

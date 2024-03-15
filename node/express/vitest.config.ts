@@ -1,8 +1,10 @@
 import path from "path"
+import { execSync } from "child_process"
 import dotenv from "dotenv"
 import { defineConfig } from "vitest/config"
 
 dotenv.config({ path: path.resolve(__dirname, ".env.test") })
+execSync("pnpm db:migrate", { stdio: "inherit" })
 
 export default defineConfig({
   resolve: {

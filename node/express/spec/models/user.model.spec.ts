@@ -87,4 +87,11 @@ describe("User", () => {
       await expect(bcrypt.compare(password, user.password)).resolves.toBe(true)
     })
   })
+
+  describe("toJSON", () => {
+    it("does not render the User's password", async () => {
+      const user = await prisma.user.create({ data: { email, password } })
+      expect("password" in user.toJSON).toBe(false)
+    })
+  })
 })
