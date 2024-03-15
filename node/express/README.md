@@ -5,7 +5,7 @@
 - [x] Connection to a PostgreSQL database
 - [x] Task Model
 - [x] /tasks routes
-- [ ] User Model
+- [x] User Model
 - [ ] JWT authentication
 - [ ] /users routes
 - [ ] Working demo
