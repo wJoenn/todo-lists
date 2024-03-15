@@ -10,19 +10,19 @@ type UserCreateArgs = Omit<Prisma.UserCreateArgs, "data"> & {
   }
 }
 
-const _hashed_args = async <A extends UserCreateArgs>(args: A) => {
-  const { select, data } = args
-
+const hashArgsPassword = async <A extends UserCreateArgs>(args: A): Promise<UserCreateArgs> => {
   const salt = await bcrypt.genSalt()
-  data.password = await bcrypt.hash(data.password, salt)
+  args.data.password = await bcrypt.hash(args.data.password, salt)
 
-  return {
-    select: select as A["select"],
-    data
-  }
+  return args
 }
 
-const _prismaError = (error: unknown) => {
+const passwordConfirmationMatchesPassword = ({ password, password_confirmation }: UserCreateArgs["data"]): boolean => {
+  if (!password_confirmation) { return true }
+  return password === password_confirmation
+}
+
+const prismaError = (error: unknown): unknown => {
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     if (error.code === "P2002") {
       return Object.assign(new Error(), {
@@ -34,7 +34,7 @@ const _prismaError = (error: unknown) => {
   return error
 }
 
-const _toJSON = (user: Prisma.UserUncheckedUpdateInput) => omit(user, "password")
+const toJSON = (user: Prisma.UserUncheckedUpdateInput) => omit(user, "password")
 
 const UserSchema = zod
   .object({
@@ -47,10 +47,7 @@ const UserSchema = zod
       .min(1, { message: "Password can't be blank" }),
     password_confirmation: zod.string().optional()
   })
-  .refine(({ password, password_confirmation }) => {
-    if (!password_confirmation) { return true }
-    return password === password_confirmation
-  }, {
+  .refine(passwordConfirmationMatchesPassword, {
     message: "Password confirmation doesn't match Password",
     path: ["password_confirmation"]
   }) satisfies zod.Schema<UserCreateArgs["data"]>
@@ -60,19 +57,21 @@ export default prisma.$extends({
     user: {
       create: async <A extends UserCreateArgs>(args: A) => {
         args.data = UserSchema.parse(args.data)
-        const hashed_args = await _hashed_args(args)
+        const argsWithHashedPassword = await hashArgsPassword(args)
 
         try {
-          const user = await prisma.user.create(hashed_args) as Prisma.UserGetPayload<A>
-          return { ...user, toJSON: _toJSON(user) }
-        } catch (error) { throw _prismaError(error) }
+          const user = await prisma.user.create(argsWithHashedPassword) as Prisma.UserGetPayload<A>
+          return { ...user, toJSON: toJSON(user) }
+        } catch (error) {
+          throw prismaError(error)
+        }
       }
     }
   },
   result: {
     user: {
       toJSON: {
-        compute: _toJSON
+        compute: toJSON
       }
     }
   }
