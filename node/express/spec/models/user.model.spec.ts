@@ -91,7 +91,7 @@ describe("User", () => {
   describe("toJSON", () => {
     it("does not render the User's password", async () => {
       const user = await prisma.user.create({ data: { email, password } })
-      expect("password" in user.toJSON).toBe(false)
+      expect("password" in user.toJSON()).toBe(false)
     })
   })
 })

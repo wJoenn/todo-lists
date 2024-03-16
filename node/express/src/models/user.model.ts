@@ -10,31 +10,20 @@ type UserCreateArgs = Omit<Prisma.UserCreateArgs, "data"> & {
   }
 }
 
-const hashArgsPassword = async <A extends UserCreateArgs>(args: A): Promise<UserCreateArgs> => {
-  const salt = await bcrypt.genSalt()
-  args.data.password = await bcrypt.hash(args.data.password, salt)
+type UserRecord = Required<Prisma.UserUncheckedCreateInput>
 
-  return args
-}
+class User {
+  constructor(private record: UserRecord) {}
+  get id(): UserRecord["id"] { return this.record.id }
+  get createdAt(): UserRecord["createdAt"] { return this.record.createdAt }
+  get updatedAt(): UserRecord["updatedAt"] { return this.record.updatedAt }
+  get email(): UserRecord["email"] { return this.record.email }
+  get password(): UserRecord["password"] { return this.record.password }
 
-const passwordConfirmationMatchesPassword = ({ password, password_confirmation }: UserCreateArgs["data"]): boolean => {
-  if (!password_confirmation) { return true }
-  return password === password_confirmation
-}
-
-const prismaError = (error: unknown): unknown => {
-  if (error instanceof Prisma.PrismaClientKnownRequestError) {
-    if (error.code === "P2002") {
-      return Object.assign(new Error(), {
-        issues: [{ path: ["email"], message: "Email has already been taken" }]
-      })
-    }
+  toJSON() {
+    return omit(this.record, "password")
   }
-
-  return error
 }
-
-const toJSON = (user: Prisma.UserUncheckedUpdateInput) => omit(user, "password")
 
 const UserSchema = zod
   .object({
@@ -47,7 +36,10 @@ const UserSchema = zod
       .min(1, { message: "Password can't be blank" }),
     password_confirmation: zod.string().optional()
   })
-  .refine(passwordConfirmationMatchesPassword, {
+  .refine(({ password, password_confirmation }) => {
+    if (!password_confirmation) { return true }
+    return password === password_confirmation
+  }, {
     message: "Password confirmation doesn't match Password",
     path: ["password_confirmation"]
   }) satisfies zod.Schema<UserCreateArgs["data"]>
@@ -61,18 +53,30 @@ export default prisma.$extends({
 
         try {
           const user = await prisma.user.create(argsWithHashedPassword) as Prisma.UserGetPayload<A>
-          return { ...user, toJSON: toJSON(user) }
+          return new User(user)
         } catch (error) {
           throw prismaError(error)
         }
       }
     }
-  },
-  result: {
-    user: {
-      toJSON: {
-        compute: toJSON
-      }
-    }
   }
 })
+
+const hashArgsPassword = async <A extends UserCreateArgs>(args: A): Promise<UserCreateArgs> => {
+  const salt = await bcrypt.genSalt()
+  args.data.password = await bcrypt.hash(args.data.password, salt)
+
+  return args
+}
+
+const prismaError = (error: unknown): unknown => {
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === "P2002") {
+      return Object.assign(new Error(), {
+        issues: [{ path: ["email"], message: "Email has already been taken" }]
+      })
+    }
+  }
+
+  return error
+}
