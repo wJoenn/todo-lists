@@ -1,0 +1,10 @@
+Redesign client based on shadcn/vue,false
+Add CSV seed with 10 tasks,false
+Limit login attempt to 3 per 5 minutes,false
+Export CSV of tasks,false
+Add by 10 pagination for tasks and bump CSV seed to 25,false
+Send confirmation email after registration,false
+Write example in Nest,false
+Write example in Phoenix,false
+Write example in Lucky,false
+Find new tasks,false
