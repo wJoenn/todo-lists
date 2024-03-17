@@ -70,7 +70,7 @@ describe("TasksController", () => {
         expect(response.body).toStrictEqual({ errors: { title: "Title can't be blank" } })
       })
 
-      it("returns a created HTTP status", () => {
+      it("returns a unprocessable_entity HTTP status", () => {
         expect(response.status).toBe(422)
       })
     })
@@ -110,7 +110,7 @@ describe("TasksController", () => {
         expect(response.body).toStrictEqual({ errors: { task: "Task must exist" } })
       })
 
-      it("returns a created HTTP status", () => {
+      it("returns a not_found HTTP status", () => {
         expect(response.status).toBe(404)
       })
     })
@@ -158,7 +158,7 @@ describe("TasksController", () => {
         expect(response.body).toStrictEqual({ errors: { task: "Task must exist" } })
       })
 
-      it("returns a created HTTP status", () => {
+      it("returns a not_found HTTP status", () => {
         expect(response.status).toBe(404)
       })
     })
