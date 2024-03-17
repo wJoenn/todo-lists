@@ -19,6 +19,9 @@ model Task {
   updatedAt   DateTime    @updatedAt @default(now())
   title       String      @db.Text
   completed   Boolean?    @default(false)
+
+  userId      Int
+  user        User        @relation(fields: [userId], references: id)
 }
 
 model User {
@@ -28,4 +31,6 @@ model User {
   email       String      @db.Text @unique
   password    String      @db.Text
   jti         String      @db.Text @unique @default(uuid())
+
+  tasks       Task[]
 }

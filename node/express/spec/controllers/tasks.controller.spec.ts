@@ -10,21 +10,22 @@ describe("TasksController", () => {
   let response: supertest.Response
   const request = supertest(app)
   const title = "My task"
+  let user: User
 
-  const createTask = async () => await prismaTask.task.create({ data: { title } })
+  const createTask = async () => await prismaTask.task.create({ data: { title, userId: user.id } })
   const createUser = async () => await prismaUser.user.create({
     data: { email: "user@example.com", password: "password" }
   })
 
   describe("GET /tasks", () => {
     beforeEach(async () => {
+      user = await createUser()
       await createTask()
       response = await request.get("/tasks")
     })
 
     describe("when a User is authenticated", () => {
       beforeEach(async () => {
-        const user = await createUser()
         response = await request.get("/tasks").set("Authorization", user.jwt)
       })
 
@@ -54,8 +55,6 @@ describe("TasksController", () => {
 
   describe("POST /tasks", () => {
     describe("when a User is authenticated", () => {
-      let user: User
-
       beforeEach(async () => {
         user = await createUser()
       })
@@ -120,16 +119,11 @@ describe("TasksController", () => {
     let task: Prisma.TaskGetPayload<true>
 
     beforeEach(async () => {
+      user = await createUser()
       task = await createTask()
     })
 
     describe("when a User is authenticated", () => {
-      let user: User
-
-      beforeEach(async () => {
-        user = await createUser()
-      })
-
       describe("when the Task is found", () => {
         beforeEach(async () => {
           response = await request.delete(`/tasks/${task.id}`).set("Authorization", user.jwt)
@@ -178,16 +172,11 @@ describe("TasksController", () => {
     let task: Prisma.TaskGetPayload<true>
 
     beforeEach(async () => {
+      user = await createUser()
       task = await createTask()
     })
 
     describe("when a User is authenticated", () => {
-      let user: User
-
-      beforeEach(async () => {
-        user = await createUser()
-      })
-
       describe("when the Task is found", () => {
         beforeEach(async () => {
           response = await request.patch(`/tasks/${task.id}/complete`).set("Authorization", user.jwt)

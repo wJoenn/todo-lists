@@ -12,7 +12,7 @@ type UserCreateArgs = Omit<Prisma.UserCreateArgs, "data"> & {
 }
 
 export class User {
-  constructor(private user: Prisma.UserGetPayload<true>) {}
+  constructor(private user: Prisma.UserGetPayload<true | { include: { tasks: true }}>) {}
   get id(): number { return this.user.id }
   get createdAt(): Date { return this.user.createdAt }
   get updatedAt(): Date { return this.user.updatedAt }
@@ -20,6 +20,11 @@ export class User {
   get password(): string { return this.user.password }
   get jti(): string { return this.user.jti }
   get jwt(): string { return encode(this.jti) }
+  get tasks(): Prisma.TaskGetPayload<true>[] | undefined {
+    if ("tasks" in this.user) {
+      return this.user.tasks
+    }
+  }
 
   toJSON() {
     return omit(this.user, "jti", "password")
@@ -70,7 +75,7 @@ export default prisma.$extends({
         const argsWithHashedPassword = await hashArgsPassword(args)
 
         try {
-          const user = await prisma.user.create(argsWithHashedPassword) as Prisma.UserGetPayload<A>
+          const user = await prisma.user.create(argsWithHashedPassword)
           return new User(user)
         } catch (error) {
           throw prismaError(error)

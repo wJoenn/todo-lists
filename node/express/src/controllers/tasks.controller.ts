@@ -12,7 +12,7 @@ export const create = async (req: Request, res: Response) => {
   const { task: data } = req.body as { task: Prisma.TaskUncheckedCreateInput }
 
   try {
-    const task = await prisma.task.create({ data })
+    const task = await prisma.task.create({ data: { ...data, userId: req.currentUser.id } })
     return res.status(201).json(task)
   } catch (error) {
     return _handleError(error, res)

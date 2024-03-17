@@ -23,7 +23,6 @@
     "./**/*",
   ],
   "exclude": [
-    "./node_modules",
-    "./console.ts"
+    "./node_modules"
   ]
 }
