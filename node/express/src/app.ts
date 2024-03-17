@@ -2,7 +2,7 @@ import express from "express"
 import * as TasksController from "src/controllers/tasks.controller.ts"
 import * as UsersRegistrationsController from "src/controllers/users/registrations.controller.ts"
 import * as UsersSessionsController from "src/controllers/users/sessions.controller.ts"
-import authenticateUser from "~/middleware/authenticateUser.middleware.ts"
+import authenticateUser from "src/middlewares/authenticateUser.middleware.ts"
 
 const app = express()
 app.use(express.json())
