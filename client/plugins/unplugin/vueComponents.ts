@@ -24,19 +24,14 @@ const createEslintComponentsFile = () => {
 }
 
 const getComponents = (componentsDir = `${rootDir}/src/components/`): string[] => {
-  let components : string[] = []
-  fs.readdir(componentsDir, null, (_, files) => {
-    if (files) {
-      components = files
-    }
-  })
+  const components = fs.readdirSync(componentsDir)
 
   return components
     .flatMap(file => {
       const filePath = `${componentsDir}${file}`
       const stat = fs.statSync(filePath)
 
-      return stat.isDirectory() ? getComponents(filePath) : [file.replace(".vue", "")]
+      return stat.isDirectory() ? getComponents(`${filePath}/`) : [file.replace(".vue", "")]
     })
     .sort()
 }

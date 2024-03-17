@@ -4,7 +4,10 @@
       "error",
       "PascalCase",
       {
-        "globals": []
+        "globals": [
+          "BaseContainer",
+          "BaseForm"
+        ]
       }
     ]
   }

@@ -1,6 +1,6 @@
 <template>
   <div id="root">
-    <div class="container">
+    <BaseContainer>
       <RouterLink to="/users/sign_out">Sign out</RouterLink>
 
       <div class="frame">
@@ -16,16 +16,14 @@
           </div>
         </div>
 
-        <form @submit.prevent="handleSubmit">
-          <span v-if="errors.task" class="error">{{ errors.task }}</span>
-
-          <div class="input">
-            <span v-if="errors.title" class="error">{{ errors.title }}</span>
-            <input type="text" name="title" placeholder="Got a new task to do ?">
-          </div>
-
-          <button>Add to list</button>
-        </form>
+        <BaseForm
+          action="Add a new task"
+          direction="row"
+          record="task"
+          :errors="errors"
+          :inputs="[{ name: 'title', type: 'text', placeholder: 'Got a new task to do ?' }]"
+          :style="{ 'max-width': '50%' }"
+          @submit="handleSubmit" />
 
         <table>
           <thead>
@@ -59,7 +57,7 @@
           <p>{{ tasks.filter(task => task.completed).length }} of {{ tasks.length }} task(s) completed.</p>
         </div>
       </div>
-    </div>
+    </BaseContainer>
   </div>
 </template>
 
@@ -122,156 +120,108 @@
 
 <style scoped lang="scss">
   #root {
-    .container {
+
+    a {
+      font-size: $size-md;
+      padding-right: 10px;
+      text-align: right;
+    }
+
+    .frame {
+      border: $border-dark;
+      border-radius: 10px;
       display: flex;
       flex-direction: column;
       gap: 20px;
-      margin: 0 auto;
-      width: Min(1200px, 95%);
+      padding: 35px;
 
-      > a {
-        font-size: $size-md;
-        padding-right: 10px;
-        text-align: right;
+      table {
+        border: $border-dark;
+        border-spacing: 0;
+        border-collapse: separate;
+        border-radius: 5px;
+
+        tr {
+          &:last-of-type {
+            td {
+              border: none;
+            }
+          }
+
+          svg {
+            cursor: pointer;
+            height: 15px;
+            width: 15px;
+            transition: color 0.3s ease;
+
+            &:hover {
+              color: $nuxt-green-light;
+            }
+          }
+
+          td, th {
+            border-bottom: $border-dark;
+            padding: $size-sm $size;
+          }
+
+          th {
+            color: $text-secondary;
+            font-size: $size-md;
+            font-weight: 500;
+            text-align: left;
+          }
+
+          .delete, .id {
+            min-width: 65px;
+          }
+
+          .status {
+            min-width: 200px;
+
+            p {
+              align-items: center;
+              display: flex;
+              gap: 10px;
+            }
+          }
+
+          .title {
+            overflow-wrap: break-word;
+            width: 1000px;
+          }
+        }
       }
 
-      .frame {
-        border: $border-dark;
-        border-radius: 10px;
+      .footer {
+        color: $text-secondary;
+        font-size: $size-md;
+      }
+
+      .header {
+        align-items: flex-start;
         display: flex;
-        flex-direction: column;
-        gap: 20px;
-        padding: 20px;
+        justify-content: space-between;
 
-        form {
-          align-items: flex-end;
-          display: flex;
-          gap: 20px;
-          width: 50%;
-
-          button {
-            background-color: transparent;
-            border: $border-dark;
-            border-radius: 5px;
-            cursor: pointer;
-            color: $text-primary;
-            padding: $padding;
-          }
-
-          .input {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            gap: 5px;
-
-            input {
-              background-color: transparent;
-              border: $border-dark;
-              border-radius: 5px;
-              color: $text-primary;
-              padding: $padding;
-              transition: border 0.3s ease;
-
-              &:focus {
-                border-color: $nuxt-green-light;
-                outline: none;
-              }
-            }
-
-            span {
-              font-size: $size-sm;
-            }
-          }
+        h1 {
+          font-size: 1.5rem;
         }
 
-        table {
-          border: $border-dark;
-          border-spacing: 0;
-          border-collapse: separate;
-          border-radius: 5px;
-
-          tr {
-            &:last-of-type {
-              td {
-                border: none;
-              }
-            }
-
-            svg {
-              cursor: pointer;
-              height: 15px;
-              width: 15px;
-              transition: color 0.3s ease;
-
-              &:hover {
-                color: $nuxt-green-light;
-              }
-            }
-
-            td, th {
-              border-bottom: $border-dark;
-              padding: $size-sm $size;
-            }
-
-            th {
-              color: $text-secondary;
-              font-size: $size-md;
-              font-weight: 500;
-              text-align: left;
-            }
-
-            .delete, .id {
-              min-width: 65px;
-            }
-
-            .status {
-              min-width: 200px;
-
-              p {
-                align-items: center;
-                display: flex;
-                gap: 10px;
-              }
-            }
-
-            .title {
-              overflow-wrap: break-word;
-              width: 1000px;
-            }
-          }
-        }
-
-        .footer {
+        h3 {
           color: $text-secondary;
-          font-size: $size-md;
+          font-size: $size;
+          font-weight: 500;
         }
 
-        .header {
-          align-items: flex-start;
+        .user {
+          align-items: center;
           display: flex;
-          justify-content: space-between;
+          gap: 10px;
 
-          h1 {
-            font-size: 1.5rem;
-          }
-
-          h3 {
-            color: $text-secondary;
-            font-size: $size;
-            font-weight: 500;
-          }
-
-          .user {
-            align-items: center;
-            display: flex;
-            gap: 10px;
-
-            .avatar {
-              background-image: linear-gradient(135deg, $nuxt-green-light, mediumpurple);
-              border-radius: 50%;
-              height: 35px;
-              width: 35px;
-            }
+          .avatar {
+            background-image: linear-gradient(135deg, $nuxt-green-light, mediumpurple);
+            border-radius: 50%;
+            height: 35px;
+            width: 35px;
           }
         }
       }

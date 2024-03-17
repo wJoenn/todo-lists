@@ -70,6 +70,7 @@
     {
       "files": ["*.vue"],
       "rules": {
+        "func-call-spacing": "off",
         "indent": "off",
         "max-len": "off"
       }
