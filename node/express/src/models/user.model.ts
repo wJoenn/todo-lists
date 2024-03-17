@@ -57,7 +57,7 @@ const UserSchema = zod
 export default prisma.$extends({
   model: {
     user: {
-      byJWT: async (bearer: string): Promise<User | undefined> => {
+      byJWT: async (bearer: string) => {
         const jti = decode(bearer)
         if (!jti) { return }
 
@@ -65,7 +65,7 @@ export default prisma.$extends({
         if (user) { return new User(user) }
       },
 
-      create: async <A extends UserCreateArgs>(args: A): Promise<User> => {
+      create: async <A extends UserCreateArgs>(args: A) => {
         args.data = UserSchema.parse(args.data)
         const argsWithHashedPassword = await hashArgsPassword(args)
 
@@ -77,8 +77,13 @@ export default prisma.$extends({
         }
       },
 
-      findFirst: async <A extends Parameters<typeof prisma.user.findFirst>[0]>(args?: A): Promise<User | undefined> => {
+      findFirst: async <A extends Parameters<typeof prisma.user.findFirst>[0]>(args?: A) => {
         const user = await prisma.user.findFirst(args)
+        if (user) { return new User(user) }
+      },
+
+      findUnique: async <A extends Parameters<typeof prisma.user.findUnique>[0]>(args: A) => {
+        const user = await prisma.user.findUnique(args)
         if (user) { return new User(user) }
       }
     }
