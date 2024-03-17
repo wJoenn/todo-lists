@@ -11,7 +11,7 @@ type UserCreateArgs = Omit<Prisma.UserCreateArgs, "data"> & {
   }
 }
 
-class User {
+export class User {
   constructor(private user: Prisma.UserGetPayload<true>) {}
   get id(): number { return this.user.id }
   get createdAt(): Date { return this.user.createdAt }
@@ -75,6 +75,11 @@ export default prisma.$extends({
         } catch (error) {
           throw prismaError(error)
         }
+      },
+
+      findFirst: async <A extends Parameters<typeof prisma.user.findFirst>[0]>(args?: A): Promise<User | undefined> => {
+        const user = await prisma.user.findFirst(args)
+        if (user) { return new User(user) }
       }
     }
   }
@@ -90,9 +95,9 @@ const hashArgsPassword = async <A extends UserCreateArgs>(args: A): Promise<User
 const prismaError = (error: unknown): unknown => {
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     if (error.code === "P2002") {
-      return Object.assign(new Error(), {
-        issues: [{ path: ["email"], message: "Email has already been taken" }]
-      })
+      return new zod.ZodError([
+        { code: "custom", path: ["email"], message: "Email has already been taken" }
+      ])
     }
   }
 

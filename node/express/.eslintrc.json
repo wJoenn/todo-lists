@@ -47,12 +47,13 @@
         "delimiter": "comma",
         "requireLast": false
       }
-    }],
+      }],
+    "@typescript-eslint/no-confusing-void-expression": "off",
     "@typescript-eslint/no-misused-promises": ["error", {
       "checksVoidReturn": false
-    }],
-    "@typescript-eslint/no-useless-constructor": "error",
-    "@typescript-eslint/space-infix-ops": "error"
+      }],
+      "@typescript-eslint/no-useless-constructor": "error",
+      "@typescript-eslint/space-infix-ops": "error"
   },
   "overrides": [
     {
