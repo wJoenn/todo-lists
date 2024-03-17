@@ -72,6 +72,7 @@ export default prisma.$extends({
 
       create: async <A extends UserCreateArgs>(args: A) => {
         args.data = UserSchema.parse(args.data)
+        delete args.data.password_confirmation
         const argsWithHashedPassword = await hashArgsPassword(args)
 
         try {
