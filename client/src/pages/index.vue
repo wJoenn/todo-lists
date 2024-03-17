@@ -17,7 +17,7 @@
       <p>{{ task.title }}</p>
       <p>Task is {{ task.completed ? '' : 'not ' }}completed</p>
       <button @click="completeTask(task.id, index)">Complete</button>
-      <button @click="deleteTask(task.id, index)">Delete</button>
+      <button @click="deleteTask(task.id)">Delete</button>
     </li>
   </ul>
 
@@ -39,15 +39,16 @@
       headers: sessionStore.authorizationHeader
     })
 
-    const task = tasks.value[index]
+    const task = sortedTasks.value[index]
     task.completed = true
   }
 
-  const deleteTask = async (id: number, index: number) => {
+  const deleteTask = async (id: number) => {
     await axios.delete(`${import.meta.env.VITE_API_URL}/tasks/${id}`, {
       headers: sessionStore.authorizationHeader
     })
 
+    const index = tasks.value.findIndex(task => task.id === id)
     tasks.value.splice(index, 1)
   }
 
