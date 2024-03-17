@@ -81,7 +81,7 @@ RSpec.describe Users::RegistrationsController, type: :request do
         expect(data["errors"]).to match({ "email" => "Email can't be blank", "password" => "Password can't be blank" })
       end
 
-      it "returns a HTTP status of unprocessable_entity" do
+      it "returns a unprocessable_entity HTTP status" do
         expect(last_response.status).to be 422
       end
     end
