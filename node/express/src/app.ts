@@ -22,6 +22,7 @@ app.delete("/users/sign_out", UsersSessionsController.destroy)
 
 export default app
 
-app.listen(3000, () => {
-  console.log("Server opened at http://localhost:3000")
+const port = process.env.PORT ?? 3000
+app.listen(port, () => {
+  console.log(`Server opened at http://localhost:${port}`)
 })
