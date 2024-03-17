@@ -6,8 +6,8 @@
 - [x] Task Model
 - [x] /tasks routes
 - [x] User Model
-- [ ] JWT authentication
+- [x] JWT authentication
 - [ ] /users routes
 - [ ] Working demo
 - [ ] Specs and test coverage
-- [ ] Formatting
+- [x] Formatting

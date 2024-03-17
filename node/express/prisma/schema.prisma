@@ -27,4 +27,5 @@ model User {
   updatedAt   DateTime    @updatedAt @default(now())
   email       String      @db.Text @unique
   password    String      @db.Text
+  jti         String      @db.Text @unique @default(uuid())
 }

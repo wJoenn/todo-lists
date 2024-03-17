@@ -2,6 +2,7 @@ import bcrypt from "bcrypt"
 import { z as zod } from "zod"
 import { Prisma } from "@prisma/client"
 import { omit } from "../utils"
+import { decode, encode, jti } from "~/libs/jwt.ts"
 import prisma from "~/libs/prisma.ts"
 
 type UserCreateArgs = Omit<Prisma.UserCreateArgs, "data"> & {
@@ -10,18 +11,27 @@ type UserCreateArgs = Omit<Prisma.UserCreateArgs, "data"> & {
   }
 }
 
-type UserRecord = Required<Prisma.UserUncheckedCreateInput>
-
 class User {
-  constructor(private record: UserRecord) {}
-  get id(): UserRecord["id"] { return this.record.id }
-  get createdAt(): UserRecord["createdAt"] { return this.record.createdAt }
-  get updatedAt(): UserRecord["updatedAt"] { return this.record.updatedAt }
-  get email(): UserRecord["email"] { return this.record.email }
-  get password(): UserRecord["password"] { return this.record.password }
+  constructor(private user: Prisma.UserGetPayload<true>) {}
+  get id(): number { return this.user.id }
+  get createdAt(): Date { return this.user.createdAt }
+  get updatedAt(): Date { return this.user.updatedAt }
+  get email(): string { return this.user.email }
+  get password(): string { return this.user.password }
+  get jti(): string { return this.user.jti }
+  get jwt(): string { return encode(this.jti) }
 
   toJSON() {
-    return omit(this.record, "password")
+    return omit(this.user, "jti", "password")
+  }
+
+  async editJTI() {
+    const user = await prisma.user.update({
+      where: { id: this.id },
+      data: { jti: jti() }
+    })
+
+    Object.assign(this, { user })
   }
 }
 
@@ -47,7 +57,15 @@ const UserSchema = zod
 export default prisma.$extends({
   model: {
     user: {
-      create: async <A extends UserCreateArgs>(args: A) => {
+      byJWT: async (bearer: string): Promise<User | undefined> => {
+        const jti = decode(bearer)
+        if (!jti) { return }
+
+        const user = await prisma.user.findUnique({ where: { jti } })
+        if (user) { return new User(user) }
+      },
+
+      create: async <A extends UserCreateArgs>(args: A): Promise<User> => {
         args.data = UserSchema.parse(args.data)
         const argsWithHashedPassword = await hashArgsPassword(args)
 
