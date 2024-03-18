@@ -11,5 +11,7 @@ declare module 'vue' {
     BaseForm: typeof import('./../src/components/base/BaseForm.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TasksTable: typeof import('./../src/components/TasksTable.vue')['default']
+    TaskTable: typeof import('./../src/components/TaskTable.vue')['default']
   }
 }
