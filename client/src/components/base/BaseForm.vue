@@ -1,5 +1,7 @@
 <template>
-  <form @submit.prevent="event => $emit('submit', event)">
+  <form
+    :style="{ alignItems: direction === 'row' ? 'flex-end' : 'center', flexDirection: direction }"
+    @submit.prevent="event => $emit('submit', event)">
     <span v-if="errors[record]" class="error">{{ errors[record] }}</span>
 
     <div v-for="input in inputs" :key="input.name" class="input" :style="inputStyle">
@@ -7,7 +9,7 @@
       <input :type="input.type" :name="input.name" :placeholder="input.placeholder">
     </div>
 
-    <button>{{ action }}</button>
+    <button :style="{ alignItems: direction === 'row' ? 'flex-end' : 'flex-start' }">{{ action }}</button>
   </form>
 </template>
 
@@ -27,7 +29,6 @@
     direction: "column"
   })
 
-  const alignItems = computed(() => props.direction === "row" ? "flex-end" : "center")
   const inputStyle = computed(() => {
     if (props.direction === "row") {
       return { "flex-grow": "1" }
@@ -39,13 +40,10 @@
 
 <style scoped lang="scss">
   form {
-    align-items: v-bind(alignItems);
     display: flex;
-    flex-direction: v-bind(direction);
     gap: 20px;
 
     button {
-      align-self: flex-start;
       background-color: transparent;
       border: $border-dark;
       border-radius: 5px;
@@ -75,6 +73,10 @@
 
       span {
         font-size: $size-sm;
+      }
+
+      .error {
+        color: $text-negative;
       }
     }
   }
