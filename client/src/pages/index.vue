@@ -32,7 +32,10 @@
 
           <div v-if="tasks.length > 10">
             <BaseButton :disabled="page === 1" @click="page--"><Icon icon="mdi:chevron-left" /></BaseButton>
-            <BaseButton :disabled="tasks.length <= 10 * page" @click="page++"><Icon icon="mdi:chevron-right" /></BaseButton>
+
+            <BaseButton :disabled="tasks.length <= 10 * page" @click="page++">
+              <Icon icon="mdi:chevron-right" />
+            </BaseButton>
           </div>
         </div>
       </div>
