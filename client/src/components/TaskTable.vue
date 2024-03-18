@@ -17,7 +17,7 @@
           <td class="status">
             <p>
               <Icon
-                :icon="task.completed ? 'icon-park-outline:check-one' : 'fa:circle-thin'"
+                :icon="task.completed ? 'material-symbols:check-circle-outline' : 'material-symbols:circle-outline'"
                 @click="$emit('complete', { id: task.id, index })" />
 
               <span>{{ task.completed ? 'Done' : 'Todo' }}</span>
