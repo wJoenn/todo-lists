@@ -5,8 +5,10 @@
       "PascalCase",
       {
         "globals": [
+          "BaseButton",
           "BaseContainer",
-          "BaseForm"
+          "BaseForm",
+          "TaskTable"
         ]
       }
     ]

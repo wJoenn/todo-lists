@@ -9,7 +9,7 @@
       <input :type="input.type" :name="input.name" :placeholder="input.placeholder">
     </div>
 
-    <button :style="{ alignItems: direction === 'row' ? 'flex-end' : 'flex-start' }">{{ action }}</button>
+    <BaseButton :style="{ alignSelf: direction === 'row' ? 'flex-end' : 'flex-start' }">{{ action }}</BaseButton>
   </form>
 </template>
 
@@ -43,13 +43,9 @@
     display: flex;
     gap: 20px;
 
-    button {
-      background-color: transparent;
-      border: $border-dark;
-      border-radius: 5px;
-      cursor: pointer;
-      color: $text-primary;
-      padding: $padding;
+    .error {
+      color: $text-negative;
+      font-size: $size-sm;
     }
 
     .input {
@@ -69,14 +65,6 @@
           border-color: $nuxt-green-light;
           outline: none;
         }
-      }
-
-      span {
-        font-size: $size-sm;
-      }
-
-      .error {
-        color: $text-negative;
       }
     }
   }
