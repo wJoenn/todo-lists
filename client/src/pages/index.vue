@@ -25,10 +25,15 @@
           :style="{ 'max-width': '50%' }"
           @submit="handleSubmit" />
 
-        <TaskTable :tasks="sortedTasks" @complete="completeTask" @delete="deleteTask" />
+        <TaskTable :tasks="paginatedTasks" @complete="completeTask" @delete="deleteTask" />
 
         <div class="footer">
           <p>{{ tasks.filter(task => task.completed).length }} of {{ tasks.length }} task(s) completed.</p>
+
+          <div v-if="tasks.length > 10">
+            <BaseButton :disabled="page === 1" @click="page--"><Icon icon="mdi:chevron-left" /></BaseButton>
+            <BaseButton :disabled="tasks.length <= 10 * page" @click="page++"><Icon icon="mdi:chevron-right" /></BaseButton>
+          </div>
         </div>
       </div>
     </BaseContainer>
@@ -37,21 +42,25 @@
 
 <script setup lang="ts">
   import type { Task, TaskErrors } from "~/types"
+  import { Icon } from "@iconify/vue"
 
   const sessionStore = useSessionStore()
   const { user } = toRefs(sessionStore)
 
   const errors = ref<TaskErrors>({})
+  const page = ref(1)
   const tasks = ref<Task[]>([])
 
+  const offset = computed(() => (page.value - 1) * 10)
   const sortedTasks = computed(() => [...tasks.value].sort((a, b) => b.id - a.id))
+  const paginatedTasks = computed(() => sortedTasks.value.slice(0 + offset.value, 10 + offset.value))
 
   const completeTask = async ({ id, index }: { id: number, index: number }) => {
     await axios.patch(`${import.meta.env.VITE_API_URL}/tasks/${id}/complete`, null, {
       headers: sessionStore.authorizationHeader
     })
 
-    const task = sortedTasks.value[index]
+    const task = paginatedTasks.value[index]
     task.completed = true
   }
 
@@ -109,7 +118,14 @@
 
       .footer {
         color: $text-secondary;
+        display: flex;
         font-size: $size-md;
+        justify-content: space-between;
+
+        div {
+          display: flex;
+          gap: 10px;
+        }
       }
 
       .header {
