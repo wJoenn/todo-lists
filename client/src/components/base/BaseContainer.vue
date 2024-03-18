@@ -14,7 +14,7 @@
   const width = computed(() => {
     switch (props.size) {
     case "sm": return "500px"
-    case "lg" : return "1200px"
+    default: return "1200px"
     }
   })
 </script>
