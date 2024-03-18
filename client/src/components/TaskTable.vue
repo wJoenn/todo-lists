@@ -46,7 +46,7 @@
   const tableTransition = ref("0")
   const transitionName = ref("disabled")
 
-  const tableHeight = computed(() => `${(props.tasks.length + 1) * 45}px`)
+  const tableHeight = computed(() => `${(props.tasks.length + 1) * 46}px`)
 
   watch(() => props.tasks, (_, oldValue) => {
     if (oldValue.length === 0) {
@@ -74,6 +74,8 @@
       border-spacing: 0;
 
       tr {
+        height: 46px;
+
         &:last-of-type {
           td {
             border: none;
