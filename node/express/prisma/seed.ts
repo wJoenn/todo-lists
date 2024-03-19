@@ -3,7 +3,7 @@ import path from "path"
 import prismaTask from "src/models/task.model.ts"
 import prismaUser from "src/models/user.model.ts"
 
-const user = await prismaUser.user.create({ data: { email: "wJoenn@example.com", password: "password" } })
+const user = await prismaUser.user.create({ data: { email: "user@example.com", password: "password" } })
 
 const file = fs.readFileSync(path.resolve(__dirname, "./static/tasks.csv"), "utf-8")
 const rows = file.trim().split("\n").map(row => row.split(",")) as [string, string][]

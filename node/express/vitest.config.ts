@@ -6,7 +6,7 @@ import { defineConfig } from "vitest/config"
 process.env.PORT = "0"
 dotenv.config({ path: path.resolve(__dirname, ".env.test") })
 
-execSync("pnpm db:migrate", { stdio: "inherit" })
+execSync("pnpm db:migrate")
 
 export default defineConfig({
   resolve: {
