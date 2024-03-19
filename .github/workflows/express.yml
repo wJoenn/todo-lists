@@ -9,6 +9,9 @@ on:
     paths:
      - node/express/**
 
+env:
+  JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+
 jobs:
   eslint:
     name: EsLint
@@ -56,10 +59,15 @@ jobs:
         with:
           postgresql user: test
           postgresql password: password
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          package_json_file: ./node/express/package.json
+          version: 8
       - name: Build app
         run: |
-          npm install
-          npx prisma db push
+          pnpm install
+          pnpx prisma db push
         working-directory: ./node/express
         env:
           DATABASE_URL: 'postgres://test:password@localhost/application_test'
