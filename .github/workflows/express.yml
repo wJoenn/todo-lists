@@ -41,3 +41,30 @@ jobs:
       - name: Run TypeScript
         run: npm run tsc
         working-directory: ./node/express
+
+  vitest:
+    name: Vitest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Set up PostgreSQL
+        uses: Harmon758/postgresql-action@v1.0.0
+        with:
+          postgresql user: test
+          postgresql password: password
+      - name: Build app
+        run: |
+          npm install
+          npx prisma db push
+        working-directory: ./node/express
+        env:
+          DATABASE_URL: 'postgres://test:password@localhost/application_test'
+      - name: Run Vitest
+        run: pnpm test
+        working-directory: ./node/express
+        env:
+          DATABASE_URL: 'postgres://test:password@localhost/application_test'
