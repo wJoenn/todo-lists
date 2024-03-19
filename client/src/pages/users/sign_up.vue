@@ -1,32 +1,28 @@
 <template>
-  <h1>Sign up</h1>
+  <div id="sign-in">
+    <BaseContainer size="sm">
+      <h1>Sign up</h1>
 
-  <form @submit.prevent="handleSubmit">
-    <span v-if="errors.user" class="error">{{ errors.user }}</span>
+      <BaseForm
+        action="Sign in"
+        record="user"
+        :errors="errors"
+        :inputs="inputs"
+        @submit="handleSubmit" />
 
-    <div>
-      <input name="email" type="text" placeholder="Email...">
-      <span v-if="errors.email" class="error">{{ errors.email }}</span>
-    </div>
-
-    <div>
-      <input name="password" type="password" placeholder="Password...">
-      <span v-if="errors.password" class="error">{{ errors.password }}</span>
-    </div>
-
-    <div>
-      <input name="password_confirmation" type="password" placeholder="Password confirmation...">
-      <span v-if="errors.password_confirmation" class="error">{{ errors.password_confirmation }}</span>
-    </div>
-
-    <input type="submit">
-  </form>
-
-  <RouterLink to="/users/sign_in">Sign in</RouterLink>
+      <RouterLink to="/users/sign_in">Sign in</RouterLink>
+    </BaseContainer>
+  </div>
 </template>
 
 <script setup lang="ts">
   import type { UserErrors } from "~/types"
+
+  const inputs = [
+    { name: "email", type: "text" as const, placeholder: "Email..." },
+    { name: "password", type: "password" as const, placeholder: "Password..." },
+    { name: "password_confirmation", type: "password" as const, placeholder: "Password confirmation..." }
+  ]
 
   const router = useRouter()
   const sessionStore = useSessionStore()
@@ -46,3 +42,11 @@
     }
   }
 </script>
+
+<style scoped lang="scss">
+  #sign-up {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+</style>
