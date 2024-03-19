@@ -11,7 +11,7 @@
           </div>
 
           <div class="user">
-            <p>{{ user?.email.replace(/@.+/, "") }}</p>
+            <p>{{ sessionStore.user?.email.replace(/@.+/, "") }}</p>
             <div class="avatar" />
           </div>
         </div>
@@ -25,19 +25,7 @@
           :style="{ 'max-width': '50%' }"
           @submit="handleSubmit" />
 
-        <TaskTable :page="page" :tasks="tasks" @complete="completeTask" @delete="deleteTask" />
-
-        <div class="footer">
-          <p>{{ tasks.filter(task => task.completed).length }} of {{ tasks.length }} task(s) completed.</p>
-
-          <div v-if="tasks.length > 10">
-            <BaseButton :disabled="page === 1" @click="page--"><Icon icon="mdi:chevron-left" /></BaseButton>
-
-            <BaseButton :disabled="tasks.length <= 10 * page" @click="page++">
-              <Icon icon="mdi:chevron-right" />
-            </BaseButton>
-          </div>
-        </div>
+        <TaskTable :tasks="tasks" @complete="completeTask" @delete="deleteTask" />
       </div>
     </BaseContainer>
   </div>
@@ -45,13 +33,10 @@
 
 <script setup lang="ts">
   import type { Task, TaskErrors } from "~/types"
-  import { Icon } from "@iconify/vue"
 
   const sessionStore = useSessionStore()
-  const { user } = toRefs(sessionStore)
 
   const errors = ref<TaskErrors>({})
-  const page = ref(1)
   const tasks = ref<Task[]>([])
 
   const completeTask = async (id: number) => {
@@ -114,18 +99,6 @@
       flex-direction: column;
       gap: 20px;
       padding: 35px;
-
-      .footer {
-        color: $text-secondary;
-        display: flex;
-        font-size: $size-md;
-        justify-content: space-between;
-
-        div {
-          display: flex;
-          gap: 10px;
-        }
-      }
 
       .header {
         align-items: flex-start;
