@@ -11,14 +11,14 @@
       </thead>
 
       <TransitionGroup tag="tbody" :name="transitionName">
-        <tr v-for="(task, index) in tasks" :key="task.id">
+        <tr v-for="task in paginatedTasks" :key="task.id">
           <td class="id">{{ task.id }}</td>
           <td class="title">{{ task.title }}</td>
           <td class="status">
             <p>
               <Icon
                 :icon="task.completed ? 'material-symbols:check-circle-outline' : 'material-symbols:circle-outline'"
-                @click="$emit('complete', { id: task.id, index })" />
+                @click="$emit('complete', task.id)" />
 
               <span>{{ task.completed ? 'Done' : 'Todo' }}</span>
             </p>
@@ -35,18 +35,22 @@
   import { Icon } from "@iconify/vue"
 
   defineEmits<{
-    (event: "complete", payload: { id: number, index: number }): void
+    (event: "complete", payload: number): void
     (event: "delete", payload: number): void
   }>()
 
   const props = defineProps<{
+    page: number
     tasks: Task[]
   }>()
 
   const tableTransition = ref("0")
   const transitionName = ref("disabled")
 
-  const tableHeight = computed(() => `${(props.tasks.length + 1) * 46}px`)
+  const offset = computed(() => (props.page - 1) * 10)
+  const sortedTasks = computed(() => [...props.tasks].sort((a, b) => b.id - a.id))
+  const paginatedTasks = computed(() => sortedTasks.value.slice(0 + offset.value, 10 + offset.value))
+  const tableHeight = computed(() => `${(paginatedTasks.value.length + 1) * 46}px`)
 
   watch(() => props.tasks, (_, oldValue) => {
     if (oldValue.length === 0) {

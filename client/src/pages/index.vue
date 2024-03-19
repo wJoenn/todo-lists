@@ -25,7 +25,7 @@
           :style="{ 'max-width': '50%' }"
           @submit="handleSubmit" />
 
-        <TaskTable :tasks="paginatedTasks" @complete="completeTask" @delete="deleteTask" />
+        <TaskTable :page="page" :tasks="tasks" @complete="completeTask" @delete="deleteTask" />
 
         <div class="footer">
           <p>{{ tasks.filter(task => task.completed).length }} of {{ tasks.length }} task(s) completed.</p>
@@ -54,17 +54,13 @@
   const page = ref(1)
   const tasks = ref<Task[]>([])
 
-  const offset = computed(() => (page.value - 1) * 10)
-  const sortedTasks = computed(() => [...tasks.value].sort((a, b) => b.id - a.id))
-  const paginatedTasks = computed(() => sortedTasks.value.slice(0 + offset.value, 10 + offset.value))
-
-  const completeTask = async ({ id, index }: { id: number, index: number }) => {
+  const completeTask = async (id: number) => {
     await axios.patch(`${import.meta.env.VITE_API_URL}/tasks/${id}/complete`, null, {
       headers: sessionStore.authorizationHeader
     })
 
-    const task = paginatedTasks.value[index]
-    task.completed = true
+    const index = tasks.value.findIndex(task => task.id === id)
+    tasks.value[index].completed = true
   }
 
   const deleteTask = async (id: number) => {
