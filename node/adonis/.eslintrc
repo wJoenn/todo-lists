@@ -8,6 +8,7 @@
   "rules": {
     "prettier/prettier": "off",
 
+    "arrow-parens": ["error", "as-needed"],
     "comma-dangle": ["error", "never"],
     "max-len": ["error", 120],
     "multiline-ternary": ["error", "never"],
