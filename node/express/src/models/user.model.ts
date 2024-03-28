@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt"
 import { z as zod } from "zod"
 import { Prisma } from "@prisma/client"
-import { omit } from "../utils"
+import { omit } from "../utils/index.ts"
 import { decode, encode, jti } from "~/libs/jwt.ts"
 import prisma from "~/libs/prisma.ts"
 
@@ -12,7 +12,7 @@ type UserCreateArgs = Omit<Prisma.UserCreateArgs, "data"> & {
 }
 
 export class User {
-  constructor(private user: Prisma.UserGetPayload<true | { include: { tasks: true }}>) {}
+  constructor(private readonly user: Prisma.UserGetPayload<true | { include: { tasks: true } }>) {}
   get id(): number { return this.user.id }
   get createdAt(): Date { return this.user.createdAt }
   get updatedAt(): Date { return this.user.updatedAt }
@@ -32,8 +32,8 @@ export class User {
 
   async editJTI() {
     const user = await prisma.user.update({
-      where: { id: this.id },
-      data: { jti: jti() }
+      data: { jti: jti() },
+      where: { id: this.id }
     })
 
     Object.assign(this, { user })
@@ -63,10 +63,10 @@ export default prisma.$extends({
   model: {
     user: {
       byJWT: async (bearer: string) => {
-        const jti = decode(bearer)
-        if (!jti) { return }
+        const jwtId = decode(bearer)
+        if (!jwtId) { return }
 
-        const user = await prisma.user.findUnique({ where: { jti } })
+        const user = await prisma.user.findUnique({ where: { jti: jwtId } })
         if (user) { return new User(user) }
       },
 
@@ -107,7 +107,7 @@ const prismaError = (error: unknown): unknown => {
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     if (error.code === "P2002") {
       return new zod.ZodError([
-        { code: "custom", path: ["email"], message: "Email has already been taken" }
+        { code: "custom", message: "Email has already been taken", path: ["email"] }
       ])
     }
   }

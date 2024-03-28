@@ -1,15 +1,13 @@
 import crypto from "crypto"
 import jwt from "jsonwebtoken"
 
-export const decode = (bearerToken: string): string | undefined => {
+export const decode = (bearerToken: string) => {
   const token = bearerToken.replace(/^Bearer /, "")
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET_KEY) as jwt.JwtPayload
     return payload.jti
-  } catch {
-    return undefined
-  }
+  } catch {}
 }
 
 export const encode = (jti: string): string => {

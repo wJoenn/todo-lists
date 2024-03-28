@@ -10,6 +10,6 @@ const rows = file.trim().split("\n").map(row => row.split(",")) as [string, stri
 
 for (const row of rows) {
   const [title, completed] = row
-  const data = { title, completed: completed === "true" }
+  const data = { completed: completed === "true", title }
   await prismaTask.task.create({ data: { ...data, userId: user.id } })
 }

@@ -35,7 +35,7 @@ describe("jwt", () => {
     it("creates random Json Web Token ids", () => {
       const jtis = Array.from(Array(100))
         .map(() => jti())
-        .filter((jti, index, array) => array.indexOf(jti) === index)
+        .filter((jwtId, index, array) => array.indexOf(jwtId) === index)
 
       expect(jtis).toHaveLength(100)
     })

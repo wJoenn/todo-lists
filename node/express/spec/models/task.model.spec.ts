@@ -13,7 +13,7 @@ describe("Task", () => {
           user: true
         }
       })
-      expect(task.user).toMatchObject({ id: user.id, email: user.email })
+      expect(task.user).toMatchObject({ email: user.email, id: user.id })
     })
   })
 
@@ -32,7 +32,7 @@ describe("Task", () => {
       try {
         await query
       } catch (err) {
-        const issues = (err as ZodError).issues
+        const { issues } = err as ZodError
         expect(issues).toHaveLength(1)
         expect(issues.map(issue => issue.message)).toStrictEqual(["Title can't be blank"])
       }

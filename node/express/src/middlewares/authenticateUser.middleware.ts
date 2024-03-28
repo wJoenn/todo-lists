@@ -2,13 +2,16 @@ import type { RequestHandler } from "express"
 import prisma from "src/models/user.model.ts"
 
 const whitelist = [
-  JSON.stringify({ path: "/users", method: "POST" }),
-  JSON.stringify({ path: "/users/sign_in", method: "POST" })
+  JSON.stringify({ method: "POST", path: "/users" }),
+  JSON.stringify({ method: "POST", path: "/users/sign_in" })
 ]
 
 const authenticateUser: RequestHandler = async (req, res, next) => {
-  const { path, method } = req
-  if (whitelist.includes(JSON.stringify({ path, method }))) { return next() }
+  const { method, path } = req
+  if (whitelist.includes(JSON.stringify({ method, path }))) {
+    next()
+    return
+  }
 
   const jwt = req.headers.authorization
 
@@ -17,7 +20,7 @@ const authenticateUser: RequestHandler = async (req, res, next) => {
 
     if (user) {
       req.currentUser = user
-      return next()
+      return
     }
   }
 

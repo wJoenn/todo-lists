@@ -13,7 +13,7 @@ describe("User", () => {
     it("has many Task", async () => {
       const userId = (await createUser()).id
       await prismaTask.task.create({ data: { title: "My task", userId } })
-      const user = await prismaUser.user.findUnique({ where: { id: userId }, include: { tasks: true } })
+      const user = await prismaUser.user.findUnique({ include: { tasks: true }, where: { id: userId } })
 
       expect(user).toBeDefined()
       user?.tasks?.forEach(task => {
@@ -35,7 +35,7 @@ describe("User", () => {
       try {
         await query
       } catch (err) {
-        const issues = (err as ZodError).issues
+        const { issues } = err as ZodError
         expect(issues).toHaveLength(1)
         expect(issues.map(issue => issue.message)).toStrictEqual(["Email can't be blank"])
       }
@@ -48,7 +48,7 @@ describe("User", () => {
       try {
         await query
       } catch (err) {
-        const issues = (err as ZodError).issues
+        const { issues } = err as ZodError
         expect(issues).toHaveLength(1)
         expect(issues.map(issue => issue.message)).toStrictEqual(["Email is invalid"])
       }
@@ -63,7 +63,7 @@ describe("User", () => {
       try {
         await query
       } catch (err) {
-        const issues = (err as ZodError).issues
+        const { issues } = err as ZodError
         expect(issues).toHaveLength(1)
         expect(issues.map(issue => issue.message)).toStrictEqual(["Email has already been taken"])
       }
@@ -76,7 +76,7 @@ describe("User", () => {
       try {
         await query
       } catch (err) {
-        const issues = (err as ZodError).issues
+        const { issues } = err as ZodError
         expect(issues).toHaveLength(1)
         expect(issues.map(issue => issue.message)).toStrictEqual(["Password can't be blank"])
       }
@@ -89,7 +89,7 @@ describe("User", () => {
       try {
         await query
       } catch (err) {
-        const issues = (err as ZodError).issues
+        const { issues } = err as ZodError
         expect(issues).toHaveLength(1)
         expect(issues.map(issue => issue.message)).toStrictEqual(["Password confirmation doesn't match Password"])
       }

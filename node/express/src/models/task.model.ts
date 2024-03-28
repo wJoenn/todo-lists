@@ -1,5 +1,5 @@
+import type { Prisma } from "@prisma/client"
 import { z as zod } from "zod"
-import { Prisma } from "@prisma/client"
 import prisma from "~/libs/prisma.ts"
 
 const TaskSchema = zod.object({

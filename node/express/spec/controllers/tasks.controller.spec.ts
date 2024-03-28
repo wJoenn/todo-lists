@@ -1,10 +1,9 @@
 import type { Prisma } from "@prisma/client"
-import type { User } from "src/models/user.model.ts"
 import supertest from "supertest"
 import { beforeEach } from "vitest"
 import app from "src/app.ts"
 import prismaTask from "src/models/task.model.ts"
-import prismaUser from "src/models/user.model.ts"
+import prismaUser, { type User } from "src/models/user.model.ts"
 
 describe("TasksController", () => {
   let response: supertest.Response
