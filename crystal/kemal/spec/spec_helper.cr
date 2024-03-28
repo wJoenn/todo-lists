@@ -4,6 +4,7 @@ ENV["PORT"] = "9999"
 require "spec-kemal"
 require "../src/app.cr"
 
+require "../db/migrations/*"
 Jennifer::Migration::Runner.migrate
 
 Spec.before_each do

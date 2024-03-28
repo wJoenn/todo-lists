@@ -10,7 +10,7 @@ dependencies:
 
   jennifer: # Crystal ORM using ActiveRecord pattern with flexible query DSL
     github: imdrasil/jennifer.cr
-    version: "= 0.12.0"
+    version: "~> 0.13.0"
 
   jwt: # JWT implementation in Crystal
     github: crystal-community/jwt
