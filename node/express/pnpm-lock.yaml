@@ -50,8 +50,8 @@ devDependencies:
     specifier: ^8.57.0
     version: 8.57.0
   eslint-config-joenn:
-    specifier: ^0.0.5
-    version: 0.0.5(eslint@8.57.0)(typescript@5.4.3)
+    specifier: ^0.1.2
+    version: 0.1.2(@typescript-eslint/parser@7.4.0)(eslint@8.57.0)(typescript@5.4.3)
   prisma:
     specifier: ^5.10.2
     version: 5.10.2
@@ -1644,19 +1644,20 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /eslint-config-joenn@0.0.5(eslint@8.57.0)(typescript@5.4.3):
-    resolution: {integrity: sha512-jvjVpR2oQx0QO3G1BsaueGUMgFSnwkZdVbOXiY3kDvBhJyKKO0LGW6ZvlyLzgV+F5Ct35JGMdLQL3hsgHIcfuA==}
+  /eslint-config-joenn@0.1.2(@typescript-eslint/parser@7.4.0)(eslint@8.57.0)(typescript@5.4.3):
+    resolution: {integrity: sha512-bssvVl3QtuE0Oa8nHftTqdSjv56lyVDKbIPCFGHNoQn1RYi9kfjChueFiSFIjE3DC2FYefydxRH8bfaIFI591w==}
     peerDependencies:
       eslint: '>= 8.57.0'
     dependencies:
       '@stylistic/eslint-plugin-js': 1.7.0(eslint@8.57.0)
       '@stylistic/eslint-plugin-ts': 1.7.0(eslint@8.57.0)(typescript@5.4.3)
-      '@typescript-eslint/eslint-plugin': 7.4.0(@typescript-eslint/parser@7.4.0)(eslint@8.57.0)(typescript@5.4.3)
-      '@typescript-eslint/parser': 7.4.0(eslint@8.57.0)(typescript@5.4.3)
       eslint: 8.57.0
       eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.4.0)(eslint@8.57.0)
       eslint-plugin-promise: 6.1.1(eslint@8.57.0)
+      globals: 15.0.0
+      typescript-eslint: 7.4.0(eslint@8.57.0)(typescript@5.4.3)
     transitivePeerDependencies:
+      - '@typescript-eslint/parser'
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
       - supports-color
@@ -2128,6 +2129,11 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       type-fest: 0.20.2
+    dev: true
+
+  /globals@15.0.0:
+    resolution: {integrity: sha512-m/C/yR4mjO6pXDTm9/R/SpYTAIyaUB4EOzcaaMEl7mds7Mshct9GfejiJNQGjHHbdMPey13Kpu4TMbYi9ex1pw==}
+    engines: {node: '>=18'}
     dev: true
 
   /globalthis@1.0.3:
@@ -3453,6 +3459,25 @@ packages:
       has-proto: 1.0.3
       is-typed-array: 1.1.13
       possible-typed-array-names: 1.0.0
+    dev: true
+
+  /typescript-eslint@7.4.0(eslint@8.57.0)(typescript@5.4.3):
+    resolution: {integrity: sha512-8GYQsb/joknlAZEAs/kqonfrsAc98C5DoellmwHREPqKwSTKSY2YB93IwmvNuX6+WE5QkKc31X9wHo/UcpYXpw==}
+    engines: {node: ^18.18.0 || >=20.0.0}
+    peerDependencies:
+      eslint: ^8.56.0
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 7.4.0(@typescript-eslint/parser@7.4.0)(eslint@8.57.0)(typescript@5.4.3)
+      '@typescript-eslint/parser': 7.4.0(eslint@8.57.0)(typescript@5.4.3)
+      '@typescript-eslint/utils': 7.4.0(eslint@8.57.0)(typescript@5.4.3)
+      eslint: 8.57.0
+      typescript: 5.4.3
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /typescript@5.4.3:

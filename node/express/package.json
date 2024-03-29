@@ -12,7 +12,7 @@
     "db:seed": "prisma db seed",
     "db:setup": "pnpm db:create && pnpm db:migrate && pnpm db:seed",
     "generate:migration": "prisma migrate dev --name ",
-    "lint": "eslint . --ext .js,.ts,.d.ts --max-warnings=0",
+    "lint": "eslint .",
     "test": "vitest run",
     "tsc": "tsc"
   },
@@ -33,7 +33,7 @@
     "bun": "^1.0.30",
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
-    "eslint-config-joenn": "^0.0.5",
+    "eslint-config-joenn": "^0.1.2",
     "prisma": "^5.10.2",
     "supertest": "^6.3.4",
     "typescript": "^5.4.3",
