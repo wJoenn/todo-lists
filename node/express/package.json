@@ -33,7 +33,7 @@
     "bun": "^1.0.30",
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
-    "eslint-config-joenn": "^0.1.2",
+    "eslint-config-joenn": "^0.2.5",
     "prisma": "^5.10.2",
     "supertest": "^6.3.4",
     "typescript": "^5.4.3",
