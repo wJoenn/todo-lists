@@ -4,6 +4,6 @@
 
   onBeforeMount(async () => {
     await sessionStore.signOut()
-    router.push("/")
+    await router.push("/")
   })
 </script>

@@ -5,7 +5,7 @@ export type User = {
   password_confirmation?: never
 }
 
-export type UserErrors = { user?: string } & Partial<{ [key in keyof Omit<User, "id">]: string }>
+export type UserErrors = Partial<{ [key in keyof Omit<User, "id">]: string }> & { user?: string }
 
 export type Task = {
   id: number
@@ -13,4 +13,4 @@ export type Task = {
   completed: boolean
 }
 
-export type TaskErrors = { task?: string } & Partial<{ [key in keyof Omit<Task, "id">]: string }>
+export type TaskErrors = Partial<{ [key in keyof Omit<Task, "id">]: string }> & { task?: string }

@@ -1,12 +1,13 @@
 <template>
   <form
     :style="{ alignItems: direction === 'row' ? 'flex-end' : 'center', flexDirection: direction }"
-    @submit.prevent="event => $emit('submit', event)">
+    @submit.prevent="event => $emit('submit', event)"
+  >
     <span v-if="errors[record]" class="error">{{ errors[record] }}</span>
 
     <div v-for="input in inputs" :key="input.name" class="input" :style="inputStyle">
       <span v-if="errors[input.name]" class="error">{{ errors[input.name] }}</span>
-      <input :type="input.type" :name="input.name" :placeholder="input.placeholder">
+      <input :name="input.name" :placeholder="input.placeholder" :type="input.type">
     </div>
 
     <BaseButton :style="{ alignSelf: direction === 'row' ? 'flex-end' : 'flex-start' }">{{ action }}</BaseButton>
@@ -20,7 +21,11 @@
 
   const props = withDefaults(defineProps<{
     errors: Record<string, string>
-    inputs: { name: string, type: "text" | "password", placeholder?: string }[]
+    inputs: {
+      name: string
+      placeholder?: string
+      type: "password" | "text"
+    }[]
     record: string
     action?: string
     direction?: "column" | "row"

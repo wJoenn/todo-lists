@@ -4,6 +4,12 @@
   </button>
 </template>
 
+<script setup lang="ts">
+  defineSlots<{
+    default: unknown
+  }>()
+</script>
+
 <style lang="scss">
   .base-button {
     align-items: center;

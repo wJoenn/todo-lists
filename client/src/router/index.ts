@@ -3,15 +3,23 @@ import type { RouteLocationAsString, RouteNamedMap } from "unplugin-vue-router/t
 
 const verifyAuthentification = (to: RouteLocationNormalized, next: NavigationGuardNext) => {
   const sessionStore = useSessionStore()
-  // @ts-ignore
+
+  // @ts-expect-error
   const whiteList: RouteLocationAsString<RouteNamedMap>[] = [
     "/users/sign_in",
     "/users/sign_up"
   ]
 
-  if (sessionStore.isLoggedIn && whiteList.includes(to.path)) { return next("/") }
-  if (!sessionStore.isLoggedIn && !whiteList.includes(to.path)) { return next("/users/sign_in") }
-  return next()
+  if (sessionStore.isLoggedIn && whiteList.includes(to.path)) {
+    next("/")
+    return
+  }
+  if (!sessionStore.isLoggedIn && !whiteList.includes(to.path)) {
+    next("/users/sign_in")
+    return
+  }
+
+  next()
 }
 
 const router = createRouter({

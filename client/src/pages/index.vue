@@ -19,13 +19,14 @@
         <BaseForm
           action="Add a new task"
           direction="row"
-          record="task"
-          :errors="errors"
+          :errors
           :inputs="[{ name: 'title', type: 'text', placeholder: 'Got a new task to do ?' }]"
-          :style="{ 'max-width': '50%' }"
-          @submit="handleSubmit" />
+          record="task"
+          style="max-width: 50%;"
+          @submit="handleSubmit"
+        />
 
-        <TaskTable :tasks="tasks" @complete="completeTask" @delete="deleteTask" />
+        <TaskTable :tasks @complete="completeTask" @delete="deleteTask" />
       </div>
     </BaseContainer>
   </div>
@@ -70,8 +71,10 @@
 
       tasks.value.push(response.data)
       form.reset()
-    } catch (error: any) {
-      errors.value = error.response.data.errors
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        errors.value = (error.response?.data as { errors: TaskErrors } | undefined)?.errors ?? {}
+      }
     }
   }
 

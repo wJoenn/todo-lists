@@ -12,15 +12,24 @@ const unpluginVueComponents = () => {
 }
 
 const createEslintComponentsFile = () => {
-  const eslintrc = {
-    rules: {
-      "vue/component-name-in-template-casing": ["error", "PascalCase", {
-        globals: getComponents()
-      }]
-    }
-  }
+  const eslintConfig = [
+    "/* eslint-disable */",
+    'import vue from "eslint-plugin-vue"',
+    "",
+    "export default {",
+    "  plugins: { vue },",
+    "  rules: {",
+    '    "vue/component-name-in-template-casing": ["error", "PascalCase", {',
+    "      globals: [",
+    getComponents().map(component => `        "${component}"`).join(",\n"),
+    "      ]",
+    "    }]",
+    "  }",
+    "}",
+    ""
+  ].join("\n")
 
-  fs.writeFileSync(`${rootDir}/.vue/.eslintrc-components.json`, JSON.stringify(eslintrc, null, 2))
+  fs.writeFileSync(`${rootDir}/.vue/eslint.components.config.js`, eslintConfig)
 }
 
 const getComponents = (componentsDir = `${rootDir}/src/components/`): string[] => {

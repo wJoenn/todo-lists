@@ -1,11 +1,10 @@
-/* eslint import/extensions: 0, import/no-unresolved: 0 */
 import fs from "fs"
 import path from "path"
 import { defineConfig } from "vite"
 import vue from "@vitejs/plugin-vue"
 import { unpluginAutoImport, unpluginVueComponents, unpluginVueRouter } from "./plugins/unplugin"
 
-fs.mkdir(".vue", () => {})
+fs.mkdir(".vue", () => null)
 
 export default defineConfig({
   css: {

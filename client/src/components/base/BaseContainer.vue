@@ -6,10 +6,14 @@
 
 <script setup lang="ts">
   const props = withDefaults(defineProps<{
-    size?: "sm" | "lg"
+    size?: "lg" | "sm"
   }>(), {
     size: "lg"
   })
+
+  defineSlots<{
+    default: unknown
+  }>()
 
   const width = computed(() => {
     switch (props.size) {

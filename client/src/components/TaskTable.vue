@@ -11,7 +11,7 @@
           </tr>
         </thead>
 
-        <TransitionGroup tag="tbody" :name="transitionName">
+        <TransitionGroup :name="transitionName" tag="tbody">
           <tr v-for="task in paginatedTasks" :key="task.id">
             <td class="id">{{ task.id }}</td>
             <td class="title">{{ task.title }}</td>
@@ -19,7 +19,8 @@
               <p>
                 <Icon
                   :icon="task.completed ? 'material-symbols:check-circle-outline' : 'material-symbols:circle-outline'"
-                  @click="$emit('complete', task.id)" />
+                  @click="$emit('complete', task.id)"
+                />
 
                 <span>{{ task.completed ? 'Done' : 'Todo' }}</span>
               </p>
@@ -51,8 +52,7 @@
   import { Icon } from "@iconify/vue"
 
   defineEmits<{
-    (event: "complete", payload: number): void
-    (event: "delete", payload: number): void
+    (event: "complete" | "delete", payload: number): void
   }>()
 
   const props = defineProps<{
@@ -75,10 +75,6 @@
         transitionName.value = "table-row"
       }, 100)
     }
-  })
-
-  onMounted(() => {
-
   })
 </script>
 

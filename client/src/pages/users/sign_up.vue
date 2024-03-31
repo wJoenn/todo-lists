@@ -5,10 +5,11 @@
 
       <BaseForm
         action="Sign in"
+        :errors
+        :inputs
         record="user"
-        :errors="errors"
-        :inputs="inputs"
-        @submit="handleSubmit" />
+        @submit="handleSubmit"
+      />
 
       <RouterLink to="/users/sign_in">Sign in</RouterLink>
     </BaseContainer>
@@ -19,9 +20,9 @@
   import type { UserErrors } from "~/types"
 
   const inputs = [
-    { name: "email", type: "text" as const, placeholder: "Email..." },
-    { name: "password", type: "password" as const, placeholder: "Password..." },
-    { name: "password_confirmation", type: "password" as const, placeholder: "Password confirmation..." }
+    { name: "email", placeholder: "Email...", type: "text" as const },
+    { name: "password", placeholder: "Password...", type: "password" as const },
+    { name: "password_confirmation", placeholder: "Password confirmation...", type: "password" as const }
   ]
 
   const router = useRouter()
@@ -36,9 +37,9 @@
 
     const response = await sessionStore.signUp(formData)
     if (sessionStore.isLoggedIn) {
-      router.push("/")
+      await router.push("/")
     } else {
-      errors.value = response
+      errors.value = response ?? {}
     }
   }
 </script>

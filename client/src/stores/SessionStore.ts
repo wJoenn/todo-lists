@@ -1,4 +1,4 @@
-import type { User } from "~/types"
+import type { User, UserErrors } from "~/types"
 
 export const useSessionStore = defineStore("SessionStore", () => {
   const user = ref<User>()
@@ -14,7 +14,7 @@ export const useSessionStore = defineStore("SessionStore", () => {
   const signIn = (formData: FormData) => _postRequest("/users/sign_in", formData)
 
   const signInWithToken = async () => {
-    _bearerToken.value = localStorage.bearerToken
+    _bearerToken.value = localStorage.bearerToken as string | undefined
 
     if (_bearerToken.value) {
       try {
@@ -30,7 +30,7 @@ export const useSessionStore = defineStore("SessionStore", () => {
   }
 
   const signOut = async () => {
-    axios.delete(`${import.meta.env.VITE_API_URL}/users/sign_out`, {
+    await axios.delete(`${import.meta.env.VITE_API_URL}/users/sign_out`, {
       headers: authorizationHeader.value
     })
 
@@ -47,10 +47,14 @@ export const useSessionStore = defineStore("SessionStore", () => {
       })
 
       user.value = response.data
-      _bearerToken.value = response.headers.authorization
+      _bearerToken.value = response.headers.authorization as string
       localStorage.bearerToken = _bearerToken.value
-    } catch (error: any) {
-      return error.response.data.errors
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        return (error.response?.data as { errors: UserErrors } | undefined)?.errors
+      }
+
+      throw error
     }
   }
 
@@ -60,5 +64,5 @@ export const useSessionStore = defineStore("SessionStore", () => {
     localStorage.removeItem("bearerToken")
   }
 
-  return { user, authorizationHeader, isLoggedIn, signIn, signInWithToken, signOut, signUp }
+  return { authorizationHeader, isLoggedIn, signIn, signInWithToken, signOut, signUp, user }
 })
