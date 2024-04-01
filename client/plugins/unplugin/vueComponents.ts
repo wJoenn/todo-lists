@@ -1,15 +1,28 @@
 import fs from "fs"
+import path from "path"
 import Components from "unplugin-vue-components/vite"
 import { rootDir } from "."
 
-const unpluginVueComponents = () => {
-  createEslintComponentsFile()
+const VUE_COMPONENTS = [
+  "KeepAlive",
+  "RouterLink",
+  "RouterView",
+  "Suspense",
+  "Teleport",
+  "Transition",
+  "TransitionGroup"
+]
 
-  return Components({
-    dirs: ["src/components"],
-    dts: `${rootDir}/.vue/components.d.ts`
+const getComponents = (componentsDir = `${rootDir}/src/components/`): string[] => fs
+  .readdirSync(componentsDir)
+  .flatMap(file => {
+    const filePath = `${componentsDir}${file}`
+    if (path.extname(filePath) === ".ts") { return [] }
+
+    const stat = fs.statSync(filePath)
+    return stat.isDirectory() ? getComponents(`${filePath}/`) : [file.replace(".vue", "")]
   })
-}
+  .sort()
 
 const createEslintComponentsFile = () => {
   const eslintConfig = [
@@ -21,7 +34,7 @@ const createEslintComponentsFile = () => {
     "  rules: {",
     '    "vue/component-name-in-template-casing": ["error", "PascalCase", {',
     "      globals: [",
-    getComponents().map(component => `        "${component}"`).join(",\n"),
+    VUE_COMPONENTS.concat(getComponents()).map(component => `        "${component}"`).join(",\n"),
     "      ]",
     "    }]",
     "  }",
@@ -32,17 +45,20 @@ const createEslintComponentsFile = () => {
   fs.writeFileSync(`${rootDir}/.vue/eslint.components.config.js`, eslintConfig)
 }
 
-const getComponents = (componentsDir = `${rootDir}/src/components/`): string[] => {
-  const components = fs.readdirSync(componentsDir)
+const watchComponents = () => {
+  fs.watch(`${rootDir}/src/components`, { recursive: true }, () => {
+    createEslintComponentsFile()
+  })
+}
 
-  return components
-    .flatMap(file => {
-      const filePath = `${componentsDir}${file}`
-      const stat = fs.statSync(filePath)
+const unpluginVueComponents = () => {
+  createEslintComponentsFile()
+  watchComponents()
 
-      return stat.isDirectory() ? getComponents(`${filePath}/`) : [file.replace(".vue", "")]
-    })
-    .sort()
+  return Components({
+    dirs: ["src/components"],
+    dts: `${rootDir}/.vue/components.d.ts`
+  })
 }
 
 export default unpluginVueComponents

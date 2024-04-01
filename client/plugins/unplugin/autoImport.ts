@@ -5,7 +5,7 @@ import { VueRouterAutoImports } from "unplugin-vue-router"
 import { rootDir } from "."
 
 const unpluginAutoImport = () => AutoImport({
-  dirs: [`${rootDir}/src/stores`],
+  dirs: [`${rootDir}/src/stores`, `${rootDir}/src/utils`],
   dts: `${rootDir}/.vue/auto-import.d.ts`,
   eslintrc: {
     enabled: true,
