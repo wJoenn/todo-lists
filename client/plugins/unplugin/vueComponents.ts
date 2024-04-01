@@ -22,9 +22,10 @@ const getComponents = (componentsDir = `${rootDir}/src/components/`): string[] =
     const stat = fs.statSync(filePath)
     return stat.isDirectory() ? getComponents(`${filePath}/`) : [file.replace(".vue", "")]
   })
-  .sort()
 
 const createEslintComponentsFile = () => {
+  const components = [...VUE_COMPONENTS, ...getComponents()].sort()
+
   const eslintConfig = [
     "/* eslint-disable */",
     'import vue from "eslint-plugin-vue"',
@@ -34,7 +35,7 @@ const createEslintComponentsFile = () => {
     "  rules: {",
     '    "vue/component-name-in-template-casing": ["error", "PascalCase", {',
     "      globals: [",
-    VUE_COMPONENTS.concat(getComponents()).map(component => `        "${component}"`).join(",\n"),
+    components.map(component => `        "${component}"`).join(",\n"),
     "      ]",
     "    }]",
     "  }",
