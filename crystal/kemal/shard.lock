@@ -34,7 +34,7 @@ shards:
 
   jennifer:
     git: https://github.com/imdrasil/jennifer.cr.git
-    version: 0.13.0
+    version: 0.13.0+git.commit.343d9c0913599e0f30e4d9b66680ec474073aba1
 
   jwt:
     git: https://github.com/crystal-community/jwt.git

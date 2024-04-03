@@ -25,7 +25,6 @@ SET default_table_access_method = heap;
 --
 
 CREATE TABLE public.migration_versions (
-    id integer NOT NULL,
     version character varying(17) NOT NULL
 );
 
@@ -33,33 +32,11 @@ CREATE TABLE public.migration_versions (
 ALTER TABLE public.migration_versions OWNER TO joenn;
 
 --
--- Name: migration_versions_id_seq; Type: SEQUENCE; Schema: public; Owner: joenn
---
-
-CREATE SEQUENCE public.migration_versions_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.migration_versions_id_seq OWNER TO joenn;
-
---
--- Name: migration_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: joenn
---
-
-ALTER SEQUENCE public.migration_versions_id_seq OWNED BY public.migration_versions.id;
-
-
---
 -- Name: tasks; Type: TABLE; Schema: public; Owner: joenn
 --
 
 CREATE TABLE public.tasks (
-    id integer NOT NULL,
+    id bigint NOT NULL,
     title character varying(254) NOT NULL,
     completed boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone NOT NULL,
@@ -75,7 +52,6 @@ ALTER TABLE public.tasks OWNER TO joenn;
 --
 
 CREATE SEQUENCE public.tasks_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -97,7 +73,7 @@ ALTER SEQUENCE public.tasks_id_seq OWNED BY public.tasks.id;
 --
 
 CREATE TABLE public.users (
-    id integer NOT NULL,
+    id bigint NOT NULL,
     email character varying(254) NOT NULL,
     password_digest character varying(254) NOT NULL,
     created_at timestamp without time zone NOT NULL,
@@ -113,7 +89,6 @@ ALTER TABLE public.users OWNER TO joenn;
 --
 
 CREATE SEQUENCE public.users_id_seq
-    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -131,13 +106,6 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: migration_versions id; Type: DEFAULT; Schema: public; Owner: joenn
---
-
-ALTER TABLE ONLY public.migration_versions ALTER COLUMN id SET DEFAULT nextval('public.migration_versions_id_seq'::regclass);
-
-
---
 -- Name: tasks id; Type: DEFAULT; Schema: public; Owner: joenn
 --
 
@@ -149,14 +117,6 @@ ALTER TABLE ONLY public.tasks ALTER COLUMN id SET DEFAULT nextval('public.tasks_
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
-
-
---
--- Name: migration_versions migration_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: joenn
---
-
-ALTER TABLE ONLY public.migration_versions
-    ADD CONSTRAINT migration_versions_pkey PRIMARY KEY (id);
 
 
 --
